@@ -98,7 +98,10 @@ const socialImageURL = new URL(ogImage ? ogImage : '/social-card.png', Astro.url
   posthog.init(posthogKey, {
     api_host: posthogHost,
     defaults: '2025-05-24',
-    person_profiles: 'identified_only'
+    person_profiles: 'identified_only',
+    loaded: function(posthog_instance) {
+      window.__posthogReady = true;
+    }
   });
 </script>
 )}
