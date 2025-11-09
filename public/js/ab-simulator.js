@@ -137,8 +137,6 @@ const setupPuzzle = () => {
   $('start-button').addEventListener('click', startChallenge);
   $('reset-button').addEventListener('click', resetPuzzle);
   $('try-again-inline-button').addEventListener('click', resetPuzzle);
-  $('try-again-button').addEventListener('click', resetPuzzle);
-  $('try-again-failure-button').addEventListener('click', resetPuzzle);
   $('word-input').addEventListener('keypress', handleWordInput);
 };
 
@@ -244,8 +242,6 @@ const resetPuzzle = (isRepeat = false) => {
   $('input-section').classList.add('hidden');
   $('try-again-inline-button').classList.add('hidden');
   $('result-card').classList.add('hidden');
-  $('completion-message').classList.add('hidden');
-  $('failure-message').classList.add('hidden');
   
   if (isRepeat) trackEvent('puzzle_repeated', {});
 };
