@@ -38,11 +38,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPuzzle();
     updateLeaderboard();
   };
-  // Only use PostHog if it's loaded
-  if (typeof window !== 'undefined' && typeof window.posthog !== 'undefined' && window.posthog?.onFeatureFlags) {
-    window.posthog.onFeatureFlags(doInit);
+  
+  // Wait for PostHog to be fully ready with feature flags
+  function waitForPostHog(attempt = 0) {
+    if (attempt > 50) {
+      // Waited 5 seconds, give up and init anyway
+      doInit();
+      return;
+    }
+    
+    if (typeof window !== 'undefined' && window.posthog && window.posthog.onFeatureFlags) {
+      window.posthog.onFeatureFlags(doInit);
+    } else {
+      setTimeout(() => waitForPostHog(attempt + 1), 100);
+    }
   }
-  setTimeout(doInit, 1000);
+  
+  waitForPostHog();
 });
 
 const initializeVariant = () => {
