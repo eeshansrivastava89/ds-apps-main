@@ -44,14 +44,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const initializeVariant = () => {
   let variant = 'A';
+  let flagResponse = null;
+  
   if (typeof posthog !== 'undefined' && posthog?.getFeatureFlag) {
-    const flag = posthog.getFeatureFlag(FEATURE_FLAG_KEY);
-    if (flag === '4-words') variant = 'B';
-    else if (flag === 'control') variant = 'A';
-    else variant = Math.random() < 0.5 ? 'A' : 'B';
-  } else variant = Math.random() < 0.5 ? 'A' : 'B';
+    flagResponse = posthog.getFeatureFlag(FEATURE_FLAG_KEY);
+    if (flagResponse === '4-words') variant = 'B';
+    else if (flagResponse === 'control') variant = 'A';
+    else {
+      variant = Math.random() < 0.5 ? 'A' : 'B';
+      flagResponse = null; // No flag returned, just random
+    }
+  } else {
+    variant = Math.random() < 0.5 ? 'A' : 'B';
+    flagResponse = null;
+  }
   
   localStorage.setItem('simulator_variant', variant);
+  localStorage.setItem('simulator_flag_response', flagResponse || '');
   localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
   if (!localStorage.getItem('simulator_username')) {
     localStorage.setItem('simulator_username', generateUsername());
@@ -198,8 +207,11 @@ const resetPuzzle = (isRepeat = false) => {
 const trackEvent = (eventName, props = {}) => {
   if (typeof posthog === 'undefined' || !posthog?.capture) return;
   try {
+    const storedFlag = localStorage.getItem('simulator_flag_response');
+    
     posthog.capture(eventName, {
       variant: puzzleState.variant,
+      $feature_flag_response: storedFlag || null,
       user_id: localStorage.getItem('simulator_user_id'),
       ...props
     });

@@ -246,36 +246,30 @@ import PageLayout from '../../layouts/BaseLayout.astro'
 			const isSignificant = Math.abs(diff) > 10;
 			const isWinnerB = diff < 0;
 			
-			const bgClass = isSignificant 
-				? (isWinnerB ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-900' : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-900')
-				: 'bg-muted';
-			
 			const card = document.getElementById('comparison-card');
 			card.innerHTML = `
-				<div class="rounded-lg p-4 ${bgClass}">
-					<div class="grid grid-cols-3 gap-6 items-stretch">
-						<!-- 2/3 width: Variants A & B -->
-						<div class="col-span-2">
-							<div class="grid grid-cols-2 gap-4">
-								<div>
-									<div class="text-xs text-muted-foreground">Variant A<br><span class="text-xs">(3 words)</span></div>
-									<div class="font-mono text-3xl font-bold">${comparison.variant_a_avg}s</div>
-									<div class="text-xs text-muted-foreground mt-1">${comparison.variant_a_completions} completions</div>
-								</div>
-								<div>
-									<div class="text-xs text-muted-foreground">Variant B<br><span class="text-xs">(4 words)</span></div>
-									<div class="font-mono text-3xl font-bold">${comparison.variant_b_avg}s</div>
-									<div class="text-xs text-muted-foreground mt-1">${comparison.variant_b_completions} completions</div>
-								</div>
+				<div class="grid gap-4" style="grid-template-columns: 2fr 1fr;">
+					<!-- 2/3 width: Variants A & B Card -->
+					<div class="rounded-2xl border border-border bg-primary-foreground p-4">
+						<div class="grid grid-cols-2 gap-6">
+							<div>
+								<div class="text-xs text-muted-foreground">Variant A<br><span class="text-xs">(3 words)</span></div>
+								<div class="font-mono text-3xl font-bold">${comparison.variant_a_avg}s</div>
+								<div class="text-xs text-muted-foreground mt-1">${comparison.variant_a_completions} completions</div>
+							</div>
+							<div>
+								<div class="text-xs text-muted-foreground">Variant B<br><span class="text-xs">(4 words)</span></div>
+								<div class="font-mono text-3xl font-bold">${comparison.variant_b_avg}s</div>
+								<div class="text-xs text-muted-foreground mt-1">${comparison.variant_b_completions} completions</div>
 							</div>
 						</div>
-						<!-- 1/3 width: Comparison result -->
-						<div class="flex flex-col justify-center items-center text-center border-l dark:border-current border-current pl-4">
-							<div class="text-sm font-semibold mb-2">${comparison.interpretation}</div>
-							<div class="text-xs text-muted-foreground">
-								<span class="font-mono font-bold block">${diff > 0 ? '+' : ''}${diff}%</span>
-								<span>${isSignificant ? 'significant' : 'not significant'}</span>
-							</div>
+					</div>
+					<!-- 1/3 width: Comparison Result Card -->
+					<div class="rounded-2xl border border-border bg-primary-foreground p-4 flex flex-col justify-center items-center text-center">
+						<div class="text-sm font-semibold mb-2 ${isSignificant ? (isWinnerB ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400') : 'text-foreground'}">${comparison.interpretation}</div>
+						<div class="text-xs text-muted-foreground">
+							<span class="font-mono font-bold block">${diff > 0 ? '+' : ''}${diff}%</span>
+							<span>${isSignificant ? 'significant' : 'not significant'}</span>
 						</div>
 					</div>
 				</div>
