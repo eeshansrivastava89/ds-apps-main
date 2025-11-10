@@ -3,7 +3,7 @@
 	if (typeof Plotly === 'undefined') return setTimeout(initDashboard, 100);
 
 	const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000' : 'https://soma-analytics.fly.dev';
-	const colors = { variantA: '#f9e9ccff', variantB: '#f7d672ff' };
+	const colors = { variantA: '#e5e3e0ff', variantB: '#f5a656ff' };
 	const chartConfig = { responsive: true, displayModeBar: false };
 
 	function getPlotlyTheme() {
@@ -93,8 +93,8 @@
 		layout.margin = { l: 50, r: 30, t: 50, b: 40 };
 
 		Plotly.newPlot('distribution-chart', [
-			{ x: kdeA.x, y: kdeA.y, type: 'scatter', mode: 'lines', name: 'Variant A', line: { color: colors.variantA, width: 2 }, fill: 'tozeroy', fillcolor: `${colors.variantA}44` },
-			{ x: kdeB.x, y: kdeB.y, type: 'scatter', mode: 'lines', name: 'Variant B', line: { color: colors.variantB, width: 2 }, fill: 'tozeroy', fillcolor: `${colors.variantB}44`  }
+			{ x: kdeB.x, y: kdeB.y, type: 'scatter', mode: 'lines', name: 'Variant B', line: { color: colors.variantB, width: 2 }, fill: 'tozeroy', fillcolor: `${colors.variantB}66`  },
+            { x: kdeA.x, y: kdeA.y, type: 'scatter', mode: 'lines', name: 'Variant A', line: { color: colors.variantA, width: 2 }, fill: 'tozeroy', fillcolor: `${colors.variantA}22` }
 		], layout, chartConfig);
 	}
 
