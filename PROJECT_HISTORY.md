@@ -356,3 +356,77 @@ This gives us **both** speed AND freshness - views refresh automatically when ne
 - Proper use of database features (materialized views) instead of application-layer caching
 
 ---
+
+## Phase 5: Global Leaderboard Implementation (Nov 9, 2025)
+
+**Problem:** Leaderboard was localStorage-only (single user), used tiny username dictionary (10 adjectives × 10 animals = 100 combinations, high collision risk).
+
+**Solution:** Implemented global leaderboard with unique-names-generator library (1400+ adjectives × 350+ animals) backed by API queries to PostHog data in Supabase.
+
+**Changes made:**
+
+1. **Username Generation Upgrade**
+   - Installed `unique-names-generator` v4.7.1 npm package
+   - Integrated via inline Astro script (module import) in `ab-test-simulator.astro`
+   - Username format: "Speedy Tiger" style (capital case, space separator)
+   - Removed old 2-line custom dictionary (ADJECTIVES, ANIMALS arrays)
+
+2. **PostHog Identity Tracking**
+   - Added `posthog.identify(username)` when username first generated
+   - Added `username` property to all event tracking calls
+   - Username stored in `properties` JSONB column in Supabase `posthog_events` table
+
+3. **Backend Leaderboard Query** (`soma-analytics/analysis/ab_test.py`)
+   - Created `get_leaderboard(variant='A', limit=10)` function
+   - SQL: `SELECT properties->>'username', MIN(completion_time_seconds), COUNT(*) FROM posthog_events WHERE event='puzzle_completed' GROUP BY username ORDER BY best_time`
+   - Returns list of dicts: `{username, best_time, total_completions}`
+
+4. **API Endpoint** (`soma-analytics/api.py`)
+   - Added `/api/leaderboard?variant=A&limit=10` endpoint
+   - Query params validated (variant must be A/B, limit max 50)
+   - Returns JSON array sorted by best_time ascending
+
+5. **Frontend Display** (`public/js/ab-simulator.js`)
+   - Replaced localStorage logic with API fetch
+   - Shows top 5 with medals (🥇🥈🥉🏅)
+   - If user ranked 6+, shows their rank below top 5 with separator
+   - Highlights current user with blue background + 🌟 star
+   - Auto-refreshes every 5 seconds (synced with dashboard polling)
+   - Fetches immediately after puzzle completion
+
+6. **UI Polish**
+   - Top 5 always shown with rank indicators
+   - User's personal best appears below if ranked 6th or lower
+   - Empty state: "Complete to rank"
+   - Error state: "Loading..." with console error logging
+
+**Architecture:**
+```
+User completes puzzle
+  ↓
+PostHog captures event with username property
+  ↓
+Supabase webhook stores in posthog_events.properties->>'username'
+  ↓
+FastAPI queries MIN(completion_time) grouped by username
+  ↓
+Frontend fetches /api/leaderboard and renders with medals
+```
+
+**Result:**
+- Global leaderboard visible to all users
+- Much larger username variety (490,000+ unique combinations)
+- Real-time updates every 5 seconds
+- Clean separation: PostHog for identity, Supabase for storage, API for queries
+- Zero new database tables (reuses existing `posthog_events` table)
+
+**Code metrics:**
+- Lines changed: ~80 (frontend) + ~50 (backend)
+- Dependencies added: 1 (unique-names-generator)
+- New endpoints: 1 (/api/leaderboard)
+- Deployment time: ~2 minutes (both repos via GitHub Actions)
+
+---
+````
+
+---

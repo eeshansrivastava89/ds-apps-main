@@ -1,8 +1,4 @@
 const FEATURE_FLAG_KEY = 'word_search_difficulty_v2';
-const PUZZLE_CONFIG = {
-  A: { letters: ['M','A','T','H','E','M','A','T','I','C','S','L','O','W'], targetWords: ['MATH','THEM','MACE'], difficulty: 3, targetCount: 3 },
-  B: { letters: ['C','O','M','P','U','T','E','R','S','C','I','E','N','C','E','D','A','T','A'], targetWords: ['COMP','PURE','ENCE','DATA'], difficulty: 5, targetCount: 4 }
-};
 
 const $ = (id) => document.getElementById(id);
 const show = (...ids) => ids.forEach(id => $(id).classList.remove('hidden'));
@@ -25,8 +21,14 @@ const generateUsername = () => {
 };
 
 let puzzleState = {
-  variant: null, startTime: null, isRunning: false, guessedWords: [], foundWords: [], 
-  timerInterval: null, completionTime: null
+  variant: null, 
+  puzzleConfig: null, // Store the selected puzzle configuration
+  startTime: null, 
+  isRunning: false, 
+  guessedWords: [], 
+  foundWords: [], 
+  timerInterval: null, 
+  completionTime: null
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -112,9 +114,12 @@ const displayVariant = () => {
   
   puzzleState.variant = variant;
   const username = localStorage.getItem('simulator_username');
-  const config = PUZZLE_CONFIG[variant];
   
-  $('user-variant').textContent = 'Variant ' + variant;
+  // Get a random puzzle with shuffled letters for this variant
+  const config = window.PuzzleConfig.getPuzzleForVariant(variant);
+  puzzleState.puzzleConfig = config;
+  
+  $('user-variant').textContent = `Variant ${variant} | ${config.id}`;
   $('user-username').textContent = username || 'Loading...';
   $('difficulty-display').textContent = `Difficulty: ${config.difficulty}/10`;
   $('target-word-count').textContent = config.targetCount;
@@ -160,7 +165,10 @@ const startChallenge = () => {
   $('word-input').focus();
   
   puzzleState.timerInterval = setInterval(updateTimer, 100);
-  trackEvent('puzzle_started', { difficulty: PUZZLE_CONFIG[puzzleState.variant].difficulty });
+  trackEvent('puzzle_started', { 
+    difficulty: puzzleState.puzzleConfig.difficulty,
+    puzzle_id: puzzleState.puzzleConfig.id
+  });
 };
 
 const updateTimer = () => {
@@ -179,7 +187,7 @@ const handleWordInput = event => {
   event.target.value = '';
   if (!word) return;
   
-  const config = PUZZLE_CONFIG[puzzleState.variant];
+  const config = puzzleState.puzzleConfig;
   puzzleState.guessedWords.push(word);
   
   if (config.targetWords.includes(word) && !puzzleState.foundWords.includes(word)) {
@@ -227,7 +235,7 @@ const endChallenge = async (success) => {
     statusTitle.textContent = 'Challenge Complete';
   } else {
     $('result-time').textContent = '00:60:00';
-    $('result-guesses').textContent = puzzleState.foundWords.length + '/' + PUZZLE_CONFIG[puzzleState.variant].targetCount;
+    $('result-guesses').textContent = puzzleState.foundWords.length + '/' + puzzleState.puzzleConfig.targetCount;
     $('result-message').innerHTML = '⏰ Time\'s up!';
     
     // Red failure styling
