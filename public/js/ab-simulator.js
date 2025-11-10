@@ -138,7 +138,7 @@ const displayVariant = () => {
   // Create 5x5 grid for memory game with always visible grey boxes
   const gridHTML = config.grid.map((row, rowIndex) => 
     row.map((fruit, colIndex) => 
-      `<div class="aspect-square rounded-lg bg-gray-600 flex items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden memory-tile border-2 border-gray-500" data-row="${rowIndex}" data-col="${colIndex}" data-fruit="${fruit}">
+      `<div class="aspect-square rounded-lg bg-gray-600 flex items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden memory-tile border-2 border-gray-500 hover:!bg-orange-500 hover:!border-orange-600 hover:scale-105" data-row="${rowIndex}" data-col="${colIndex}" data-fruit="${fruit}">
         <span class="text-2xl transition-all duration-300 fruit-emoji opacity-0 scale-80">${fruit}</span>
       </div>`
     ).join('')
