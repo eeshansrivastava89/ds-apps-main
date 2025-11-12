@@ -409,35 +409,46 @@ const trackEvent = (eventName, props = {}) => {
 const fetchAndDisplayLeaderboard = async (variant) => {
   const leaderboardList = $('leaderboard-list');
   const username = localStorage.getItem('simulator_username');
-  
+  const SUPABASE_URL = window.__SUPABASE_URL__;
+  const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__;
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    leaderboardList.innerHTML = '<p class="text-center text-[0.70rem] italic text-gray-400">Supabase env missing</p>';
+    return;
+  }
+
   try {
-    const response = await fetch(`https://soma-analytics.fly.dev/api/leaderboard?variant=${variant}&limit=10`);
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/leaderboard`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ variant, limit_count: 10 })
+    });
     if (!response.ok) throw new Error('Failed to fetch leaderboard');
-    
     const data = await response.json();
-    
+
     if (!data || data.length === 0) {
       leaderboardList.innerHTML = '<p style="text-align: center; color: #9ca3af; font-style: italic; font-size: 0.75rem; margin: 0; padding: 1rem 0;">Complete to rank</p>';
       return;
     }
-    
-    // Find user's best time in the full data
+
     const userBest = data.find(entry => entry.username === username);
     const userRank = data.findIndex(entry => entry.username === username) + 1;
-    
-    // Display top 5
+
     let html = data.slice(0, 5).map((entry, i) => {
       const isCurrentUser = entry.username === username;
       const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
       const highlight = isCurrentUser ? ' bg-blue-50 dark:bg-blue-950 border-l-2 border-blue-500 pl-2' : '';
-      return `<div class="flex items-center justify-between py-1.5${highlight}"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${medal}</span> ${entry.username}${isCurrentUser ? ' 🌟' : ''}</span><span style="font-weight: 600; color: #3b82f6;">${entry.best_time.toFixed(2)}s</span></div>`;
+      return `<div class="flex items-center justify-between py-1.5${highlight}"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${medal}</span> ${entry.username}${isCurrentUser ? ' 🌟' : ''}</span><span style="font-weight: 600; color: #3b82f6;">${Number(entry.best_time).toFixed(2)}s</span></div>`;
     }).join('');
-    
-    // If user has a time but is not in top 5, show their best below
+
     if (userBest && userRank > 5) {
-      html += `<div style="border-top: 1px solid #d1d5db; margin-top: 0.5rem; padding-top: 0.5rem;"><div class="flex items-center justify-between py-1.5 bg-blue-50 dark:bg-blue-950 border-l-2 border-blue-500 pl-2"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${userRank}.</span> ${userBest.username} 🌟</span><span style="font-weight: 600; color: #3b82f6;">${userBest.best_time.toFixed(2)}s</span></div></div>`;
+      html += `<div style="border-top: 1px solid #d1d5db; margin-top: 0.5rem; padding-top: 0.5rem;"><div class="flex items-center justify-between py-1.5 bg-blue-50 dark:bg-blue-950 border-l-2 border-blue-500 pl-2"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${userRank}.</span> ${userBest.username} 🌟</span><span style="font-weight: 600; color: #3b82f6;">${Number(userBest.best_time).toFixed(2)}s</span></div></div>`;
     }
-    
+
     leaderboardList.innerHTML = html;
   } catch (error) {
     console.error('Leaderboard fetch error:', error);

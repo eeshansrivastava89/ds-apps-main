@@ -218,6 +218,17 @@ import PageLayout from '../../layouts/BaseLayout.astro'
 		<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" is:inline></script>
 		<script src="/js/utils.js" is:inline></script>
 		<script src="/js/puzzle-config.js" is:inline></script>
+		<!-- Inject Supabase config for PostgREST access (uses public env vars) -->
+		<script
+			is:inline
+			define:vars={{
+				SUPABASE_URL: import.meta.env.PUBLIC_SUPABASE_URL,
+				SUPABASE_ANON_KEY: import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+			}}
+		>
+			window.__SUPABASE_URL__ = SUPABASE_URL;
+			window.__SUPABASE_ANON_KEY__ = SUPABASE_ANON_KEY;
+		</script>
 		<script src="/js/dashboard.js" is:inline></script>
 	</div>
 

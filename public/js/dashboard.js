@@ -2,9 +2,8 @@
 (function initDashboard() {
 	if (typeof Plotly === 'undefined') return setTimeout(initDashboard, 100);
 
-	const host = window.location.hostname;
-	const isLocal = host === 'localhost' || host === '127.0.0.1';
-	const API_URL = isLocal ? 'http://localhost:8000' : 'https://soma-analytics.fly.dev';
+	const SUPABASE_URL = window?.__SUPABASE_URL__;
+	const SUPABASE_ANON_KEY = window?.__SUPABASE_ANON_KEY__;
 	const colors = { variantA: '#e5e3e0ff', variantB: '#f5a656ff' };
 	const chartConfig = { responsive: true, displayModeBar: false };
 
@@ -145,18 +144,54 @@
 
 	async function updateDashboard() {
 		try {
-			const [overview, funnel, completions, distribution] = await Promise.all([
-				fetch(`${API_URL}/api/variant-overview`).then(r => r.json()),
-				fetch(`${API_URL}/api/conversion-funnel`).then(r => r.json()),
-				fetch(`${API_URL}/api/recent-completions?limit=50`).then(r => r.json()),
-				fetch(`${API_URL}/api/time-distribution`).then(r => r.json())
+			if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error('Supabase env not configured');
+
+			const overviewPromise = fetch(`${SUPABASE_URL}/rest/v1/rpc/variant_overview`, {
+				method: 'POST',
+				headers: {
+					'apikey': SUPABASE_ANON_KEY,
+					'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(null)
+			}).then(async r => {
+				if (!r.ok) {
+					const text = await r.text();
+					throw new Error(`variant_overview RPC failed (${r.status}): ${text}`);
+				}
+				return r.json();
+			});
+
+			const [overviewRaw, funnel, completions, distributionRaw] = await Promise.all([
+				overviewPromise,
+				fetch(`${SUPABASE_URL}/rest/v1/v_conversion_funnel?select=*`, {
+					headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+				}).then(r => r.json()),
+				fetch(`${SUPABASE_URL}/rest/v1/rpc/recent_completions`, {
+					method: 'POST',
+					headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+					body: JSON.stringify({ limit_count: 50 })
+				}).then(r => r.json()),
+				fetch(`${SUPABASE_URL}/rest/v1/rpc/completion_time_distribution`, {
+					method: 'POST',
+					headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+					body: JSON.stringify({})
+				}).then(r => r.json())
 			]);
 
+			// Normalize RPC return shapes (PostgREST returns an array of one row for RETURNS TABLE)
+			const overview = Array.isArray(overviewRaw) ? overviewRaw[0] : overviewRaw;
+			const distribution = Array.isArray(distributionRaw) ? distributionRaw[0] : distributionRaw;
+
 			const theme = getPlotlyTheme();
+			if (!overview || !overview.comparison || !overview.stats) {
+				throw new Error('Overview data missing');
+			}
 			renderComparison(overview.comparison);
 			renderFunnelChart(funnel, theme);
 			renderAvgTimeChart(overview.stats, theme);
-			renderDistributionChart(distribution, theme);
+			renderDistributionChart(distribution || {}, theme);
 			renderCompletionsTable(completions, theme);
 
 			document.getElementById('last-updated').innerHTML = `Last updated: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
@@ -171,7 +206,7 @@
 					<div class="rounded-lg p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 mb-3">
 						<div class="text-sm font-semibold text-red-900 dark:text-red-100 mb-1">❌ Error Loading Dashboard</div>
 						<div class="text-xs text-red-800 dark:text-red-200">${err.message}</div>
-						<div class="text-xs text-red-700 dark:text-red-300 mt-2">Check if soma-analytics API is reachable at ${API_URL}</div>
+						<div class="text-xs text-red-700 dark:text-red-300 mt-2">Check Supabase project URL and anon key in site env.</div>
 					</div>
 				`;
 				container.prepend(el);
