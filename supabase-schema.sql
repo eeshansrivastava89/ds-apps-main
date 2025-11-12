@@ -327,3 +327,42 @@ AS $$
 $$;
 
 GRANT EXECUTE ON FUNCTION public.leaderboard(text, integer) TO anon, authenticated;
+
+-- =============================================
+-- 5. Analytics run log (for notebooks/jobs)
+-- =============================================
+
+-- Simple append-only log to track notebook/job runs
+CREATE TABLE IF NOT EXISTS analytics_run_log (
+  id bigserial PRIMARY KEY,
+  job_name text NOT NULL,
+  status text NOT NULL CHECK (status IN ('ok','fail')),
+  duration_ms integer,
+  message text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_run_log_created_at ON analytics_run_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analytics_run_log_job ON analytics_run_log(job_name);
+
+COMMENT ON TABLE analytics_run_log IS 'Append-only run logs for scheduled notebooks/jobs';
+
+-- SECURITY DEFINER RPC for logging without exposing table writes
+CREATE OR REPLACE FUNCTION public.log_analytics_run(
+  job_name text,
+  status text,
+  duration_ms integer,
+  message text DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO analytics_run_log(job_name, status, duration_ms, message)
+  VALUES (job_name, status, duration_ms, CASE WHEN message IS NULL THEN NULL ELSE left(message, 2000) END);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.log_analytics_run(text, text, integer, text) TO anon, authenticated;
