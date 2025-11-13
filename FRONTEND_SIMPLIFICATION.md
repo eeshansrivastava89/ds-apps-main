@@ -20,25 +20,23 @@ This doc is intentionally brief: a pre/post visual and a chunked todo list you c
 [PostHog]             (global, feature flag + capture)
 ```
 
-## After (target)
+## After (current state)
 
-- Introduce a tiny service layer for Supabase calls.
-- Separate concerns: state, UI, feature flag/identity, analytics, and dashboard rendering.
-- Adaptive polling (backoff on errors), optional manual refresh.
+- Single folder for all simulator/dashboard logic: `public/js/ab-sim/`.
+- Clear separation: data access (`supabase-api.js`), game + feature flag + events (`core.js`), charts (`dashboard.js`).
+- Ready for Phase 2 enhancements (adaptive polling, refresh button) without further structural changes.
 
 ```
 [ab-test-simulator.astro]
-   |-- utils.js
-   |-- puzzle-config.js
-  |-- public/js/supabase-api.js    (central PostgREST calls -> window.supabaseApi)
-   |-- featureFlag.js         (resolveVariant, initUserIdentity)
-   |-- state.js               (puzzleState + reset helpers)
-   |-- puzzle-ui.js           (grid rendering, tile clicks, timers, endChallenge)
-   |-- analytics.js           (baseEventProps, trackEvent, leaderboard render)
-   |-- dashboard.js           (renders using supabaseApi, adaptive polling)
-   v
+  |-- utils.js              (DOM helpers)
+  |-- puzzle-config.js      (puzzle definitions)
+  |-- ab-sim/
+      |-- supabase-api.js  (RPC/view calls -> window.supabaseApi)
+      |-- core.js          (feature flag, state, grid UI, timers, events, leaderboard)
+      |-- dashboard.js     (plots + periodic polling)
+  v
 [Supabase PostgREST]  (all requests via supabaseApi)
-[PostHog]             (feature flag + capture via analytics.js)
+[PostHog]             (feature flag + capture inside core.js)
 ```
 
 ---
@@ -47,26 +45,17 @@ This doc is intentionally brief: a pre/post visual and a chunked todo list you c
 
 Minimal, incremental steps. You can land each item independently.
 
-### Phase 1 — Organization (no behavior change)
+### Phase 1 — Organization (complete)
 
-- [x] Create `public/js/supabase-api.js` (window.supabaseApi)
-  - Methods: `variantOverview()`, `funnel()`, `recent(n)`, `distribution()`, `leaderboard(variant, limit)`
-  - Handles headers + JSON shape normalization (RETURNS TABLE arrays → object)
-- [x] Refactor `dashboard.js` to use `supabaseApi.*` (remove inline fetches)
-- [x] Refactor leaderboard fetch in `ab-simulator.js` to `supabaseApi.leaderboard`
-- [x] Extract analytics helpers into `public/js/analytics.js`
-  - `baseEventProps(extra)`, `trackEvent(name, extra)`
-  - Replace inline `posthog.capture` calls to go through analytics helper
-- [ ] Optional split for clarity (keep small files):
-  - `public/js/state.js` — exports `puzzleState` and `resetState()`
-  - `public/js/featureFlag.js` — `resolveVariant()`, `initUserIdentity()`
-  - `public/js/puzzle-ui.js` — grid render, memorize phase, countdown, timers, `endChallenge()`
-  - keep `ab-simulator.js` as the orchestrator only
+- [x] Supabase API wrapper implemented
+- [x] Dashboard & leaderboard refactored to use wrapper
+- [x] Interim modular split created (state / featureFlag / puzzle-ui / analytics)
+- [x] Consolidated into `public/js/ab-sim/` (final structure) and removed legacy files
 
-Acceptance for Phase 1:
-- No visual changes; game and dashboard behave the same.
-- All Supabase calls go through `supabase-api.js`.
-- Event capture uses a single helper.
+Acceptance:
+- No behavior changes; same UI, stable build.
+- All PostgREST traffic via `window.supabaseApi`.
+- Single place (`core.js`) for feature flag, state, events, leaderboard logic.
 
 ### Phase 2 — UX & resilience polish
 
@@ -87,10 +76,10 @@ Acceptance for Phase 2:
 
 ## Success Markers
 
-- All data loads through a single Supabase API layer (1 place to change headers/base URL).
-- `ab-simulator.js` is small and readable (just orchestration).
-- Dashboard polling adapts to failure and offers a manual refresh.
-- You can open any file and immediately see its single purpose.
+- Single folder `public/js/ab-sim` owns simulator/dashboard logic.
+- One Supabase access layer (`supabase-api.js`).
+- Game logic encapsulated (`core.js`) with minimal global leakage.
+- Ready to implement adaptive polling & UX tweaks without further re-org.
 
 ## Tiny Test Plan
 

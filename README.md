@@ -1,82 +1,91 @@
-# Astro Resume
+# Soma Portfolio & A/B Simulator
 
-## Features
+An Astro-based personal portfolio + blog with an interactive A/B testing simulator (memory puzzle) backed by Supabase and PostHog. The simulator demonstrates feature flagging, event capture, real-time analytics (SQL views + RPCs), and frontend charting with Plotly.
 
-- Astro v4
-- TailwindCSS utility classes
-- ESLint / Prettier pre-installed and pre-configured
-- Accessible, semantic HTML markup
-- Responsive & SEO-friendly
-- Dark / Light mode, using Tailwind and CSS variables (referenced from shadcn)
-- [Astro Assets Integration](https://docs.astro.build/en/guides/assets/) for optimised images
-- MD & [MDX](https://docs.astro.build/en/guides/markdown-content/#mdx-only-features) posts
-- Pagination
-- [Automatic RSS feed](https://docs.astro.build/en/guides/rss)
-- Auto-generated [sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
-- [Expressive Code](https://expressive-code.com/) source code and syntax highlighter
+## Stack (Concise)
 
-## Credits
+- Astro + TypeScript + Tailwind
+- Supabase (SQL views + SECURITY DEFINER RPCs via PostgREST)
+- PostHog (feature flag + event ingestion)
+- Plotly (charts/funnel/table) on the simulator page
+- Fly.io (Docker build with public build args) + GitHub Actions (deploy + smoke checks)
 
-- [astro-theme-cactus](https://github.com/chrismwilliams/astro-theme-cactus) for blog design
-- [minirezume-framer](https://minirezume.framer.website/) for resume homepage design
+## Key Folders
 
-## Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-    ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-|   ├── pages/
-|   ├── styles/
-|   ├── utils/
-|   ├── site.config.ts
-│   └── types.ts
-├── .elintrc.cjs
-├── .gitignore
-├── .prettierignore
-├── package.json
-├── prettier.config.cjs
-├── README.md
-├── tailwind.config.js
-└── tsconfig.json
+```
+public/js/ab-sim/   # All simulator & dashboard logic (core, supabase-api, dashboard)
+src/pages/projects/ # Project pages including ab-test-simulator.astro
+supabase-schema.sql # Source of truth for views/RPCs
+.github/workflows/  # deploy.yml + smoke.yml health checks
 ```
 
-## Editing guide
+## Simulator Script Layout
 
-### Site info
+`public/js/ab-sim/supabase-api.js` – RPC/view fetch helpers (normalized arrays → objects)
+`public/js/ab-sim/core.js` – Feature flag resolution, game state, timers, events, leaderboard
+`public/js/ab-sim/dashboard.js` – Fetch + render analytics charts/tables at a fixed interval
 
-To edit site info such as site title and description, edit the `src/site.config.ts` file.
+## Quick Start
 
-### Page contents
+```bash
+npm install
+PUBLIC_SUPABASE_URL=... \
+PUBLIC_SUPABASE_ANON_KEY=... \
+PUBLIC_POSTHOG_KEY=... \
+npm run dev
+```
 
-To edit the resume homepage content and design, edit the `src/pages/index.astro` file.
+Open: http://localhost:4321/projects/ab-test-simulator
 
-### Page components
+Environment variables with `PUBLIC_` are exposed client-side (safe public PostgREST + PostHog keys).
 
-To edit page components found site-wide such as the card used in the homepage, edit the files found in the `src/components/` directory.
+## Build & Preview
 
-### Layouts
+```bash
+npm run build
+npm run preview
+```
 
-To edit the base layouts of all pages, edit the `src/layouts/BaseLayout.astro` file.
+## Deployment (Fly.io)
 
-To edit the layout of a blog article, edit the `src/layouts/BlogPost.astro` file.
+Supply public Supabase vars at build time (build args or fly.toml) so Astro can inline them:
 
-### Blog content
+```bash
+fly deploy \
+    --build-arg PUBLIC_SUPABASE_URL=... \
+    --build-arg PUBLIC_SUPABASE_ANON_KEY=... \
+    --build-arg PUBLIC_POSTHOG_KEY=...
+```
 
-To add blog content, insert `.md` files in the `src/content/` directory.
+GitHub Actions workflow (`deploy.yml`) can automate on push to `main` (ensure build args are defined in `fly.toml` under `[build.args]`).
 
-To add images in blog articles, insert a folder in the `src/content/` directory, add both the `.md` and image files into the new folder, and reference the image in your `.md` file.
+## Smoke Checks
 
-## Theming
+`smoke.yml` hits:
+- `rpc/variant_overview`
+- `rpc/recent_completions`
+- `rpc/completion_time_distribution`
+- `v_conversion_funnel`
 
-To change the theme colours of the site, edit the `src/styles/app.css` file.
+Repo secrets/variables required:
+`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`
 
-To change the fonts of the site, add your font files into `/public`, add it as a `@font-face` in the `src/styles/app.css` file, as a `fontFamily` in the `tailwind.config.js` file, and apply the new font class to the `body` tag in the `src/layouts/BaseLayout.astro` file.
+## Rotating Public Keys
+
+1. Update `.env` locally.
+2. Redeploy with new build args.
+3. Update GitHub Actions secrets for smoke checks.
+
+## Future (Phase 2 ideas)
+
+- Adaptive polling + manual refresh button
+- Per-session `game_session_id` for richer analytics
+- Lighter chart library if bundle size becomes a concern
+
+## License
+
+MIT
+
 
 ## Operations (Supabase + Deploy)
 
