@@ -1,10 +1,19 @@
-(function () {
-  // Feature flag key
-  const FEATURE_FLAG_KEY = 'word_search_difficulty_v2';
-  window.FEATURE_FLAG_KEY = FEATURE_FLAG_KEY;
+// Feature flag + identity keys
+const FEATURE_FLAG_KEY = 'word_search_difficulty_v2';
+const USERNAME_KEY = 'simulator_username';
+const USER_ID_KEY = 'simulator_user_id';
+window.FEATURE_FLAG_KEY = FEATURE_FLAG_KEY;
 
-  // Game state
-  const puzzleState = {
+// Username generation helper
+const generateUsername = () => {
+  if (typeof window.generateRandomUsername === 'function') {
+    return window.generateRandomUsername();
+  }
+  return 'Player ' + Math.floor(Math.random() * 1000);
+};
+
+// Game state
+const puzzleState = {
     variant: null,
     puzzleConfig: null,
     startTime: null,
@@ -70,40 +79,43 @@
   function initializeVariant() {
     if (typeof posthog === 'undefined') return false;
     const posthogVariant = posthog.getFeatureFlag(FEATURE_FLAG_KEY);
+
     let variant = null;
     if (posthogVariant === '4-words') variant = 'B';
     else if (posthogVariant === 'control') variant = 'A';
     else return false;
 
     localStorage.setItem('simulator_variant', variant);
+
     const userId = 'user_' + Math.random().toString(36).slice(2, 11);
     localStorage.setItem('simulator_user_id', userId);
+
     if (!localStorage.getItem('simulator_username')) {
-      const username = typeof window.generateRandomUsername === 'function'
-        ? window.generateRandomUsername()
-        : 'Player ' + Math.floor(Math.random() * 1000);
+      const username = generateUsername();
       localStorage.setItem('simulator_username', username);
-      if (posthog.identify) {
-        try { posthog.identify(username); } catch {}
+      if (typeof posthog !== 'undefined' && posthog.identify) {
+        posthog.identify(username);
       }
     }
+
     return true;
   }
 
   // Event tracking helper
   function trackEvent(name, extra = {}) {
     try {
-      if (typeof posthog === 'undefined' || !posthog.capture) return;
+      if (!posthog?.capture) return;
+
       posthog.capture(name, {
         variant: puzzleState.variant,
-        username: localStorage.getItem('simulator_username'),
-        user_id: localStorage.getItem('simulator_user_id'),
+        username: localStorage.getItem(USERNAME_KEY),
+        user_id: localStorage.getItem(USER_ID_KEY),
         $feature_flag: FEATURE_FLAG_KEY,
         $feature_flag_response: posthog.getFeatureFlag(FEATURE_FLAG_KEY),
         ...extra
       });
-    } catch (e) {
-      console.error('PostHog error:', e);
+    } catch (error) {
+      console.error('PostHog error:', error);
     }
   }
 
@@ -367,4 +379,3 @@
 
   // expose limited API (for potential future reuse/testing)
   window.abSim = { startChallenge, resetPuzzle, puzzleState };
-})();
