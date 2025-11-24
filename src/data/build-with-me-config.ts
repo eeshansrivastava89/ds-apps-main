@@ -41,3 +41,28 @@ export const LABEL_PROJECT_MAP: Record<string, string> = {
 	'project:ab-sim': 'ab-sim',
 	'project:basketball': 'basketball'
 }
+
+// Project metadata for display names and paths
+export interface ProjectMetadata {
+	name: string
+	path: string
+}
+
+export const PROJECT_METADATA: Record<string, ProjectMetadata> = {
+	'ab-sim': {
+		name: 'A/B Simulator',
+		path: '/ab-simulator'
+	},
+	basketball: {
+		name: 'Basketball Analyzer',
+		path: '/basketball'
+	}
+}
+
+export function getProjectName(slug: string): string {
+	return PROJECT_METADATA[slug]?.name ?? slug
+}
+
+export function getProjectPath(slug: string): string {
+	return PROJECT_METADATA[slug]?.path ?? `/${slug}`
+}

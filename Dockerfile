@@ -17,17 +17,22 @@ ENV PUBLIC_POSTHOG_HOST=$PUBLIC_POSTHOG_HOST
 ENV PUBLIC_SUPABASE_URL=$PUBLIC_SUPABASE_URL
 ENV PUBLIC_SUPABASE_ANON_KEY=$PUBLIC_SUPABASE_ANON_KEY
 
-# Copy package files
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Copy workspace and package files
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/ab-simulator/package.json ./packages/ab-simulator/
 
 # Install dependencies
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Copy source
 COPY . .
 
 # Build (Astro will bake in PUBLIC_* env vars)
-RUN npm run build
+RUN pnpm run build
 
 # Runtime stage - serve static files with Nginx
 FROM nginx:alpine
@@ -35,15 +40,22 @@ FROM nginx:alpine
 # Copy built files
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Configure nginx to listen on port 8080
+# Configure nginx to listen on port 8080 with subpath routing
 RUN echo 'server { \
     listen 8080; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
     port_in_redirect off; \
+    \
+    # Main portfolio site \
     location / { \
         try_files $uri $uri/ /index.html; \
+    } \
+    \
+    # AB Simulator subpath \
+    location /ab-simulator/ { \
+        try_files $uri $uri/ /ab-simulator/index.html; \
     } \
 }' > /etc/nginx/conf.d/default.conf
 

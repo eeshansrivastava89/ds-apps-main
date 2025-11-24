@@ -7,7 +7,8 @@ import {
 	LABEL_CATEGORY_MAP,
 	LABEL_DIFFICULTY_MAP,
 	LABEL_PROJECT_MAP,
-	POINTS_PREFIX
+	POINTS_PREFIX,
+	getProjectName
 } from '../src/data/build-with-me-config.js'
 
 dotenv.config()
@@ -16,11 +17,11 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const REPO_OWNER = process.env.GITHUB_REPO_OWNER || 'eeshansrivastava89'
 const REPO_NAME = process.env.GITHUB_REPO_NAME || 'soma-portfolio'
 const OUTPUT_PATH = path.join(process.cwd(), 'src', 'data', 'build-with-me-data.json')
-const FALLBACK_JSON = path.join(process.cwd(), 'src', 'data', 'build-with-me-data.json')
 
 if (!GITHUB_TOKEN) {
-	console.warn('GITHUB_TOKEN not set; using existing cached data.')
-	process.exit(0)
+	console.error('❌ ERROR: GITHUB_TOKEN required. Set in .env file.')
+	console.error('   Example: GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx')
+	process.exit(1)
 }
 
 const headers = {
@@ -143,26 +144,6 @@ const buildHats = (tasks) => {
 	return hats
 }
 
-const summarizeCycles = (tasks) => {
-	const byProject = {}
-	tasks.forEach((task) => {
-		const bucket = byProject[task.projectSlug] || { open: 0, claimed: 0, merged: 0 }
-		if (task.status === 'merged') bucket.merged += 1
-		else if (task.status === 'claimed' || task.status === 'in-review') bucket.claimed += 1
-		else bucket.open += 1
-		byProject[task.projectSlug] = bucket
-	})
-	return Object.entries(byProject).map(([slug, stats]) => ({
-		slug,
-		name: slug === 'ab-sim' ? 'A/B Simulator' : slug === 'basketball' ? 'Basketball Shot Analyzer' : slug,
-		phase: 'Active',
-		openTasks: stats.open,
-		claimed: stats.claimed,
-		mergedThisWeek: stats.merged,
-		highlight: stats.merged ? `${stats.merged} merged this week` : undefined
-	}))
-}
-
 const buildLeaderboard = (tasks) => {
 	const map = new Map()
 	tasks.forEach((task) => {
@@ -188,28 +169,47 @@ const main = async () => {
 	try {
 		const [issues, prs] = await Promise.all([fetchAllIssues(), fetchAllPRs()])
 		const tasks = buildTasks(issues, prs)
+
+		// Discover projects dynamically from task labels (no hardcoding)
+		const projectSlugs = new Set()
+		tasks.forEach(task => {
+			projectSlugs.add(task.projectSlug)
+		})
+
+		// Build cycles only for projects that have issues
+		const cycles = Array.from(projectSlugs).map(slug => {
+			const projectTasks = tasks.filter(t => t.projectSlug === slug)
+			const openTasks = projectTasks.filter(t => t.status === 'open').length
+			const claimed = projectTasks.filter(t => t.status === 'claimed' || t.status === 'in-review').length
+			const merged = projectTasks.filter(t => t.status === 'merged').length
+
+			return {
+				slug,
+				name: getProjectName(slug),
+				phase: 'Active',
+				openTasks,
+				claimed,
+				mergedThisWeek: merged,
+				highlight: merged > 0 ? `${merged} tasks merged` : undefined
+			}
+		})
+
 		const hats = buildHats(tasks)
-		const cycles = summarizeCycles(tasks)
 		const leaderboard = buildLeaderboard(tasks)
 
 		const payload = {
 			cycles,
 			tasks,
 			hats,
-			leaderboard,
-			upcoming: [
-				{ name: 'Metal Lyrics NLP', skills: ['NLP', 'Python', 'Genius API'], eta: 'TBD', note: 'Classifiers + topic modeling' },
-				{ name: 'Finance Dashboard', skills: ['ETL', 'Charts', 'Plaid'], eta: 'TBD', note: 'Spending classification' }
-			]
+			leaderboard
 		}
 
 		fs.writeFileSync(OUTPUT_PATH, JSON.stringify(payload, null, 2))
-		console.log(`Wrote data to ${OUTPUT_PATH}`)
+		console.log(`✅ Wrote data to ${OUTPUT_PATH}`)
+		console.log(`   Projects: ${Array.from(projectSlugs).join(', ') || 'none'}`)
+		console.log(`   Tasks: ${tasks.length}`)
 	} catch (err) {
-		console.error('Failed to fetch from GitHub:', err)
-		if (fs.existsSync(FALLBACK_JSON)) {
-			console.log('Keeping existing cached data.')
-		}
+		console.error('❌ Failed to fetch from GitHub:', err)
 		process.exit(1)
 	}
 }

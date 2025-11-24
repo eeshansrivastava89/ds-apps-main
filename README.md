@@ -39,6 +39,9 @@ Open: http://localhost:4321/projects/ab-test-simulator
 
 Environment variables with `PUBLIC_` are exposed client-side (safe public PostgREST + PostHog keys).
 
+## For Windows only
+✅ Windows: Requires git config core.symlinks true (or clone with admin rights)
+
 ## Build & Preview
 
 ```bash

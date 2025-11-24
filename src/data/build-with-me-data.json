@@ -47,27 +47,5 @@
       "reviews": 0,
       "docs": 0
     }
-  ],
-  "upcoming": [
-    {
-      "name": "Metal Lyrics NLP",
-      "skills": [
-        "NLP",
-        "Python",
-        "Genius API"
-      ],
-      "eta": "TBD",
-      "note": "Classifiers + topic modeling"
-    },
-    {
-      "name": "Finance Dashboard",
-      "skills": [
-        "ETL",
-        "Charts",
-        "Plaid"
-      ],
-      "eta": "TBD",
-      "note": "Spending classification"
-    }
   ]
 }

@@ -5,8 +5,11 @@
 	"scripts": {
 		"dev": "astro dev",
 		"dev:check": "astro check --watch & astro dev",
+		"dev:ab-sim": "pnpm --filter @soma/ab-simulator dev",
 		"start": "astro dev",
-		"build": "astro build",
+		"prebuild": "node scripts/fetch-build-with-me-data.mjs",
+		"build:packages": "dotenv -e .env -- pnpm --filter \"@soma/*\" build",
+		"build": "pnpm run build:packages && astro build",
 		"build:check": "astro check && astro build",
 		"preview": "astro preview",
 		"astro": "astro",
@@ -41,7 +44,6 @@
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.4.2",
-		"dotenv": "^17.2.3",
 		"unique-names-generator": "^4.7.1"
 	},
 	"devDependencies": {
@@ -50,6 +52,7 @@
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.10",
 		"@typescript-eslint/parser": "^7.1.1",
+		"dotenv-cli": "^11.0.0",
 		"eslint": "^8.57.0",
 		"eslint-plugin-astro": "^0.31.4",
 		"eslint-plugin-jsx-a11y": "^6.8.0",

@@ -33,3 +33,22 @@ export const LABEL_PROJECT_MAP = {
 	'project:ab-sim': 'ab-sim',
 	'project:basketball': 'basketball'
 }
+
+export const PROJECT_METADATA = {
+	'ab-sim': {
+		name: 'A/B Simulator',
+		path: '/ab-simulator'
+	},
+	basketball: {
+		name: 'Basketball Analyzer',
+		path: '/basketball'
+	}
+}
+
+export function getProjectName(slug) {
+	return PROJECT_METADATA[slug]?.name ?? slug
+}
+
+export function getProjectPath(slug) {
+	return PROJECT_METADATA[slug]?.path ?? `/${slug}`
+}

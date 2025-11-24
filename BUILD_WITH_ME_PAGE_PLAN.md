@@ -212,4 +212,4 @@
 10. **Launch Checklist**
 
 - [x] Replace nav link (Projects → Build With Me); update sitemap/rss if needed.
-- [ ] Smoke test locally; deploy to Fly; validate production fetch (or mock fallback) works.
+- [x] Smoke test locally; deploy to Fly; validate production fetch (or mock fallback) works.
