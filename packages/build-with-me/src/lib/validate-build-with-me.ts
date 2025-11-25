@@ -8,9 +8,15 @@ export interface Task {
 	status: Status
 	difficulty?: Difficulty
 	points?: number
-	assignees?: { name: string; avatar?: string }[]
+	assignees?: { name: string; avatarUrl?: string }[]
+	closedBy?: { name: string; avatarUrl?: string }
 	labels?: string[]
+	skills?: string[]
+	estimatedHours?: string
+	isGoodFirstIssue?: boolean
 	githubUrl: string
+	updatedAt?: string
+	closedAt?: string
 }
 
 export interface Cycle {
@@ -30,20 +36,30 @@ export interface Hat {
 	prNumber?: number
 }
 
-export interface LeaderboardEntry {
+export interface Contributor {
 	name: string
-	avatar?: string
-	points: number
+	avatarUrl?: string
 	mergedPRs: number
 	reviews: number
-	docs: number
+	recentActivityCount?: number
+}
+
+export interface ActivityItem {
+	type: 'merged' | 'claimed' | 'pr-opened'
+	taskId: string
+	taskTitle: string
+	user: string
+	avatarUrl?: string
+	timestamp: string
+	githubUrl: string
 }
 
 export interface BuildWithMeData {
 	cycles: Cycle[]
 	tasks: Task[]
 	hats: Hat[]
-	leaderboard: LeaderboardEntry[]
+	contributors: Contributor[]
+	recentActivity: ActivityItem[]
 	lastFetchTime?: string
 }
 
@@ -70,8 +86,13 @@ export function validateBuildWithMeData(data: unknown): BuildWithMeData | null {
 		return null
 	}
 
-	if (!Array.isArray(d.leaderboard)) {
-		console.error('❌ Invalid data: leaderboard must be array')
+	if (!Array.isArray(d.contributors)) {
+		console.error('❌ Invalid data: contributors must be array')
+		return null
+	}
+
+	if (!Array.isArray(d.recentActivity)) {
+		console.error('❌ Invalid data: recentActivity must be array')
 		return null
 	}
 
@@ -93,6 +114,8 @@ export function validateBuildWithMeData(data: unknown): BuildWithMeData | null {
 		cycles: d.cycles as Cycle[],
 		tasks: d.tasks as Task[],
 		hats: d.hats as Hat[],
-		leaderboard: d.leaderboard as LeaderboardEntry[]
+		contributors: d.contributors as Contributor[],
+		recentActivity: d.recentActivity as ActivityItem[],
+		lastFetchTime: d.lastFetchTime as string | undefined
 	}
 }

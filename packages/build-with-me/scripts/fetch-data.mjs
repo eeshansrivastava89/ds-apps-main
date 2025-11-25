@@ -11,7 +11,8 @@ import {
 	getProjectName
 } from '../src/data/build-with-me-config.js'
 
-dotenv.config()
+// Load .env from monorepo root
+dotenv.config({ path: path.join(process.cwd(), '../../.env') })
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const REPO_OWNER = process.env.GITHUB_REPO_OWNER || 'eeshansrivastava89'
@@ -67,9 +68,12 @@ const fetchAllPRs = async () => {
 
 const mapLabels = (labels) => {
 	const cats = new Set()
+	const skills = []
 	let difficulty
 	let points
 	let projectSlug = 'ab-sim'
+	let estimatedHours
+	let isGoodFirstIssue = false
 
 	for (const l of labels) {
 		const name = l.name || ''
@@ -80,13 +84,28 @@ const mapLabels = (labels) => {
 			const val = parseInt(name.replace(POINTS_PREFIX, ''), 10)
 			if (!Number.isNaN(val)) points = val
 		}
+		// Extract learning skills
+		if (name.startsWith('learn:')) {
+			skills.push(name.replace('learn:', ''))
+		}
+		// Extract estimated hours
+		if (name.startsWith('hours:')) {
+			estimatedHours = name.replace('hours:', '')
+		}
+		// Check for good first issue
+		if (name === 'good first issue') {
+			isGoodFirstIssue = true
+		}
 	}
 
 	return {
 		category: Array.from(cats),
 		difficulty,
 		points,
-		projectSlug
+		projectSlug,
+		skills,
+		estimatedHours,
+		isGoodFirstIssue
 	}
 }
 
@@ -107,9 +126,16 @@ const buildTasks = (issues, prs) => {
 	prs.forEach((pr) => prIndex.set(pr.number, pr))
 
 	return issues.map((issue) => {
-		const { category, difficulty, points, projectSlug } = mapLabels(issue.labels)
+		const { category, difficulty, points, projectSlug, skills, estimatedHours, isGoodFirstIssue } = mapLabels(issue.labels)
 		const status = mapStatus(issue, prIndex)
-		const assignees = issue.assignee ? [{ name: issue.assignee.login }] : undefined
+		// Include avatar URL from GitHub
+		const assignees = issue.assignee 
+			? [{ name: issue.assignee.login, avatarUrl: issue.assignee.avatar_url }] 
+			: undefined
+		// Track who closed the issue (for merged attribution)
+		const closedBy = issue.closed_by
+			? { name: issue.closed_by.login, avatarUrl: issue.closed_by.avatar_url }
+			: undefined
 		const labels = issue.labels.map((l) => l.name || '').filter(Boolean)
 
 		return {
@@ -121,10 +147,54 @@ const buildTasks = (issues, prs) => {
 			difficulty,
 			points,
 			assignees,
+			closedBy,
 			labels,
-			githubUrl: issue.html_url
+			skills,
+			estimatedHours,
+			isGoodFirstIssue,
+			githubUrl: issue.html_url,
+			updatedAt: issue.updated_at,
+			closedAt: issue.closed_at
 		}
 	})
+}
+
+// Build recent activity feed from tasks
+const buildRecentActivity = (tasks) => {
+	const activities = []
+	
+	tasks.forEach((task) => {
+		// Add merged events - prefer closedBy, fallback to assignee
+		if (task.status === 'merged' && task.closedAt) {
+			const mergedByUser = task.closedBy || task.assignees?.[0]
+			activities.push({
+				type: 'merged',
+				taskId: task.id,
+				taskTitle: task.title,
+				user: mergedByUser?.name || 'someone',
+				avatarUrl: mergedByUser?.avatarUrl,
+				timestamp: task.closedAt,
+				githubUrl: task.githubUrl
+			})
+		}
+		// Add claimed events
+		else if ((task.status === 'claimed' || task.status === 'in-review') && task.assignees?.length) {
+			activities.push({
+				type: task.status === 'in-review' ? 'pr-opened' : 'claimed',
+				taskId: task.id,
+				taskTitle: task.title,
+				user: task.assignees[0].name,
+				avatarUrl: task.assignees[0].avatarUrl,
+				timestamp: task.updatedAt,
+				githubUrl: task.githubUrl
+			})
+		}
+	})
+	
+	// Sort by timestamp (most recent first) and take top 10
+	return activities
+		.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+		.slice(0, 10)
 }
 
 const buildHats = (tasks) => {
@@ -144,25 +214,40 @@ const buildHats = (tasks) => {
 	return hats
 }
 
-const buildLeaderboard = (tasks) => {
+const buildContributors = (tasks, recentActivity) => {
 	const map = new Map()
+	
+	// Count recent activity per user (last 7 days)
+	const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+	const recentActivityByUser = new Map()
+	recentActivity.forEach((activity) => {
+		if (new Date(activity.timestamp) > sevenDaysAgo) {
+			const count = recentActivityByUser.get(activity.user) || 0
+			recentActivityByUser.set(activity.user, count + 1)
+		}
+	})
+	
 	tasks.forEach((task) => {
 		if (task.assignees) {
 			task.assignees.forEach((a) => {
 				const current = map.get(a.name) || {
 					name: a.name,
-					points: 0,
+					avatarUrl: a.avatarUrl,
 					mergedPRs: 0,
 					reviews: 0,
-					docs: 0
+					recentActivityCount: 0
 				}
-				current.points += task.points || 1
 				if (task.status === 'merged') current.mergedPRs += 1
+				// Keep the avatar URL if we have it
+				if (a.avatarUrl && !current.avatarUrl) current.avatarUrl = a.avatarUrl
+				// Add recent activity count
+				current.recentActivityCount = recentActivityByUser.get(a.name) || 0
 				map.set(a.name, current)
 			})
 		}
 	})
-	return Array.from(map.values()).sort((a, b) => b.points - a.points)
+	// Sort by merged PRs descending
+	return Array.from(map.values()).sort((a, b) => b.mergedPRs - a.mergedPRs)
 }
 
 const main = async () => {
@@ -195,13 +280,15 @@ const main = async () => {
 		})
 
 		const hats = buildHats(tasks)
-		const leaderboard = buildLeaderboard(tasks)
+		const recentActivity = buildRecentActivity(tasks)
+		const contributors = buildContributors(tasks, recentActivity)
 
 		const payload = {
 			cycles,
 			tasks,
 			hats,
-			leaderboard,
+			contributors,
+			recentActivity,
 			lastFetchTime: new Date().toISOString()
 		}
 

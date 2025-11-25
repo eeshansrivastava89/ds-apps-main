@@ -1,0 +1,70 @@
+import { useState } from 'react'
+import { Sparkles, GitFork, GitPullRequest, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
+
+const STEPS = [
+	{
+		icon: Sparkles,
+		title: '1. Pick a task',
+		description: 'Browse open tasks below. Look for "Good First Issue" if you\'re new.',
+		color: 'text-purple-500 bg-purple-100',
+	},
+	{
+		icon: GitFork,
+		title: '2. Claim it',
+		description: 'Comment "I\'ll take this" on the GitHub issue to reserve it.',
+		color: 'text-sky-500 bg-sky-100',
+	},
+	{
+		icon: GitPullRequest,
+		title: '3. Ship a PR',
+		description: 'Fork, code, and open a pull request. I\'ll review within 48 hours.',
+		color: 'text-orange-500 bg-orange-100',
+	},
+	{
+		icon: CheckCircle,
+		title: '4. Get merged',
+		description: 'Your work ships to production and shows on your GitHub profile.',
+		color: 'text-emerald-500 bg-emerald-100',
+	},
+]
+
+export default function StartHereGuide() {
+	const [isExpanded, setIsExpanded] = useState(false)
+
+	return (
+		<div className='rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50 to-orange-50 shadow-lg shadow-purple-500/5'>
+			<button
+				onClick={() => setIsExpanded(!isExpanded)}
+				className='flex w-full items-center justify-between px-4 py-3'
+			>
+				<div className='flex items-center gap-2'>
+					<Sparkles className='h-4 w-4 text-purple-500' />
+					<span className='text-sm font-semibold text-foreground'>New here? Here's how it works</span>
+				</div>
+				{isExpanded ? (
+					<ChevronUp className='h-4 w-4 text-muted-foreground' />
+				) : (
+					<ChevronDown className='h-4 w-4 text-muted-foreground' />
+				)}
+			</button>
+
+			{isExpanded && (
+				<div className='border-t border-purple-200/50 px-4 pb-4 pt-3'>
+					<div className='grid gap-3 sm:grid-cols-2 lg:grid-cols-4'>
+						{STEPS.map(({ icon: Icon, title, description, color }) => (
+							<div key={title} className='flex items-start gap-3'>
+								<div className={`shrink-0 rounded-lg p-2 ${color}`}>
+									<Icon className='h-4 w-4' />
+								</div>
+								<div className='min-w-0'>
+									<div className='text-sm font-semibold text-foreground'>{title}</div>
+									<div className='text-xs text-muted-foreground'>{description}</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	)
+}

@@ -4,14 +4,62 @@ import {
 	getCoreRowModel,
 	getFilteredRowModel,
 	getSortedRowModel,
+	getPaginationRowModel,
 	flexRender,
 	type ColumnDef,
 	type SortingState,
 	type ColumnFiltersState
 } from '@tanstack/react-table'
-import { ArrowUpDown, ExternalLink } from 'lucide-react'
+import { ArrowUpDown, ExternalLink, Clock, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Task } from '../lib/validate-build-with-me'
 import { CATEGORY_STYLES, STATUS_STYLES } from '../data/build-with-me-config'
+
+const DEFAULT_PAGE_SIZE = 5
+
+// Skill display names and colors
+const SKILL_STYLES: Record<string, { label: string; color: string }> = {
+	react: { label: 'React', color: 'bg-sky-100 text-sky-700' },
+	typescript: { label: 'TypeScript', color: 'bg-blue-100 text-blue-700' },
+	tailwind: { label: 'Tailwind', color: 'bg-cyan-100 text-cyan-700' },
+	astro: { label: 'Astro', color: 'bg-orange-100 text-orange-700' },
+	python: { label: 'Python', color: 'bg-yellow-100 text-yellow-700' },
+	sql: { label: 'SQL', color: 'bg-indigo-100 text-indigo-700' },
+	git: { label: 'Git', color: 'bg-red-100 text-red-700' },
+	testing: { label: 'Testing', color: 'bg-pink-100 text-pink-700' },
+}
+
+function TaskEnrichment({ task }: { task: Task }) {
+	const hasEnrichment = task.isGoodFirstIssue || task.skills?.length || task.estimatedHours
+	if (!hasEnrichment) return null
+
+	return (
+		<div className='mt-1.5 flex flex-wrap items-center gap-1.5'>
+			{task.isGoodFirstIssue && (
+				<span className='inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-semibold text-purple-700'>
+					<Sparkles className='h-3 w-3' />
+					Good First Issue
+				</span>
+			)}
+			{task.estimatedHours && (
+				<span className='inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600'>
+					<Clock className='h-3 w-3' />
+					{task.estimatedHours}h
+				</span>
+			)}
+			{task.skills?.map((skill) => {
+				const style = SKILL_STYLES[skill] || { label: skill, color: 'bg-gray-100 text-gray-600' }
+				return (
+					<span
+						key={skill}
+						className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${style.color}`}
+					>
+						{style.label}
+					</span>
+				)
+			})}
+		</div>
+	)
+}
 
 interface TasksTableProps {
 	tasks: Task[]
@@ -40,6 +88,7 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 						<div className='text-xs text-muted-foreground'>
 							{row.original.projectSlug === 'ab-sim' ? 'A/B Simulator' : 'Basketball Analyzer'}
 						</div>
+						<TaskEnrichment task={row.original} />
 					</div>
 				)
 			},
@@ -139,13 +188,22 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
+		initialState: {
+			pagination: {
+				pageSize: DEFAULT_PAGE_SIZE
+			}
+		},
 		state: {
 			sorting,
 			columnFilters
 		}
 	})
+
+	const pageCount = table.getPageCount()
+	const currentPage = table.getState().pagination.pageIndex
 
 	return (
 		<div className='rounded-2xl border border-border bg-primary-foreground shadow-lg shadow-black/5'>
@@ -159,7 +217,7 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 									<th key={header.id} className='px-4 py-3 text-left text-xs text-muted-foreground'>
 										{header.isPlaceholder
 											? null
-											: flexRender(header.column.columnDef.header, header.getContext())}
+											: (flexRender(header.column.columnDef.header, header.getContext()) as React.ReactNode)}
 									</th>
 								))}
 							</tr>
@@ -174,7 +232,7 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 								>
 									{row.getVisibleCells().map((cell) => (
 										<td key={cell.id} className='px-4 py-3 text-sm'>
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
+											{flexRender(cell.column.columnDef.cell, cell.getContext()) as React.ReactNode}
 										</td>
 									))}
 								</tr>
@@ -206,6 +264,7 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 											{task.projectSlug === 'ab-sim' ? 'A/B Simulator' : 'Basketball Analyzer'}
 										</div>
 										<div className='mt-1 font-semibold text-foreground'>{task.title}</div>
+										<TaskEnrichment task={task} />
 									</div>
 									<span
 										className={`rounded-md px-2 py-1 text-xs font-semibold ${STATUS_STYLES[task.status]}`}
@@ -252,6 +311,39 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 					<p className='py-8 text-center text-muted-foreground'>No tasks found.</p>
 				)}
 			</div>
+
+			{/* Pagination */}
+			{pageCount > 1 && (
+				<div className='flex items-center justify-center gap-1 border-t border-border px-2 py-3'>
+					<button
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+						className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent'
+					>
+						<ChevronLeft className='h-4 w-4' />
+					</button>
+					{Array.from({ length: pageCount }, (_, i) => (
+						<button
+							key={i}
+							onClick={() => table.setPageIndex(i)}
+							className={`min-w-[32px] rounded px-2 py-1.5 text-xs font-medium transition ${
+								currentPage === i
+									? 'bg-foreground text-background'
+									: 'text-muted-foreground hover:bg-muted hover:text-foreground'
+							}`}
+						>
+							{i + 1}
+						</button>
+					))}
+					<button
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}
+						className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent'
+					>
+						<ChevronRight className='h-4 w-4' />
+					</button>
+				</div>
+			)}
 		</div>
 	)
 }

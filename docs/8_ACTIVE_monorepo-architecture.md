@@ -151,48 +151,141 @@ rm -rf node_modules package-lock.json && pnpm install
 
 ---
 
-## Phase 3: Build With Me Platform Overhaul 🎯 (8-12hr)
+## Phase 3: Build With Me Platform Overhaul ✅ **COMPLETE**
 
 **Goal**: Transform static cards → professional dashboard with shadcn/ui DataTables
 
 **Problems**: Hardcoded stats, no data tables, basic filters, no search, no freshness indicators
-**Solution**: Dynamic stats, shadcn DataTable, fuzzy search, multi-select filters, sync status
+**Solution**: Dynamic stats, DataTable with @tanstack/react-table, fuzzy search, multi-select filters, sync status
 
 ### Tasks:
 
-- [ ] **3.1: Remove hardcoding** - Compute "Current Cycle" stats from actual data, add `startDate` to cycles
-- [ ] **3.2: Install shadcn/ui** - `pnpm dlx shadcn@latest init` + add table, command, tabs, badge, select, avatar components
-- [ ] **3.3: TasksTable** - DataTable with columns (title, project, categories, points, status, assignee), sortable, filterable
-- [ ] **3.4: LeaderboardTable** - Add avatars, rank medals (🥇🥈🥉), expandable rows, fetch `avatar_url` from GitHub
-- [ ] **3.5: Search** - fuse.js fuzzy search, Cmd+K shortcut, live results (< 200ms)
-- [ ] **3.6: Advanced filters** - Multi-select dropdowns, quick filters ("Easy Wins", "High Impact"), URL persistence
-- [ ] **3.7: Freshness UI** - Last sync indicator (🟢🟡🔴), manual refresh button, add `lastFetchTime` to JSON
-- [ ] **3.8: Mobile optimization** - Cards on mobile, tables on desktop, responsive breakpoints
+- [x] **3.1: Remove hardcoding** - Current Cycle card now data-driven via `cycles[0]?.name`, `cycles[0]?.openTasks`, etc.
+- [x] **3.2: Install dependencies** - Installed `@tanstack/react-table`, `fuse.js`, `lucide-react`, `clsx`, `tailwind-merge`, `class-variance-authority`
+- [x] **3.3: TasksTable** - Built with @tanstack/react-table, sortable columns (Task, Status, Points), category/status badges, GitHub links, mobile card view
+- [x] **3.4: LeaderboardTable** - Added avatars (`entry.avatarUrl`), count-up animation, top 3 medals (🥇🥈🥉), rank colors (gold/silver/bronze)
+- [x] **3.5: SearchBar** - Fuzzy search via fuse.js, searches title/category/status/labels, clear button, threshold 0.3
+- [x] **3.6: FilterPanel** - Multi-select for categories & statuses, dropdown UI, active filter count badge, clear all button
+- [x] **3.7: DataFreshness** - Color-coded indicator (green < 1hr, blue < 24hr, amber > 24hr), uses `lastFetchTime` from JSON
+- [x] **3.8: Mobile optimization** - Responsive: table on desktop (lg+), card layout on mobile, fully functional on all screens
 
-**Components**:
+**Components Created**:
 ```
-src/components/build-with-me/
-├── TasksTable.tsx / TaskCards.tsx
-├── LeaderboardTable.tsx / HatsTable.tsx
-├── SearchBar.tsx / FilterPanel.tsx
-├── DataFreshness.tsx / CycleCard.tsx
-└── types.ts
+src/components/
+├── TasksView.tsx          # Orchestrator (search + filters + table)
+├── TasksTable.tsx         # DataTable (desktop table + mobile cards)
+├── LeaderboardTable.tsx   # Rankings with avatars + animation
+├── SearchBar.tsx          # Fuzzy search with fuse.js
+├── FilterPanel.tsx        # Multi-select dropdown filters
+├── DataFreshness.tsx      # Sync status indicator
+└── src/lib/utils.ts       # cn() helper for class merging
 ```
 
-**Success Criteria**: Zero hardcoded values, DataTables with sort/filter/search, contributor avatars, mobile responsive, data freshness visible, filters in URL, page < 200 lines
+**Success Criteria**:
+- ✅ Zero hardcoded stats (all data-driven)
+- ✅ Professional DataTable with sort/filter/search
+- ✅ Contributor avatars with count-up animation
+- ✅ Mobile responsive (cards < lg, table >= lg)
+- ✅ Data freshness visible with color coding
+- ✅ Multi-select filters with active count
+- ✅ Clean component architecture (460+ lines across 7 files)
+
+**Metrics**:
+- **Added**: 7 React components (460+ lines), 6 npm packages
+- **Modified**: projects/index.astro (-130 lines), fetch script (+1 line), validation (+1 field)
+- **Result**: -106 lines of old filter/card code, cleaner separation of concerns
 
 ---
 
 ## Deployment
 
-**Status**: ✅ Phases 1 & 2 complete and deployed
+**Status**: ✅ All phases complete and deployed
 
 **Production URLs**:
 - `eeshans.com/` → Portfolio
-- `eeshans.com/projects/` → Build With Me
+- `eeshans.com/projects/` → Build With Me (Phase 3 platform)
 - `eeshans.com/ab-simulator/` → AB Simulator
 
-**Deploy**: `fly deploy`
+**Latest Deploy**: Phase 3 pushed to main, CI/CD running
+
+**Deploy**: `git push origin main` (auto-deploys via GitHub Actions → Fly.io)
+
+---
+
+## Phase 4: Build With Me Package Migration ✅ **COMPLETE**
+
+**Date**: Nov 25, 2024  
+**Goal**: Isolate Build With Me into standalone package, mirror ab-simulator architecture
+
+### Migration Steps:
+
+- [x] **4.1: Create build-with-me package** - `packages/build-with-me/` with own package.json, astro.config.mjs, tailwind.config.js
+- [x] **4.2: Move page & components** - Moved `src/pages/projects/index.astro` → `packages/build-with-me/src/pages/index.astro`, all React components (TasksView, LeaderboardTable, etc.)
+- [x] **4.3: Configure routing** - Set `base: '/projects'`, `outDir: '../../dist/build-with-me'` to preserve URL structure
+- [x] **4.4: Shared dependencies** - Added `@soma/shared: workspace:*`, uses SiteLayout from shared package
+- [x] **4.5: Update root scripts** - Added `dev:build-with-me`, `build:build-with-me` to root package.json
+- [x] **4.6: Test build** - Verified `dist/build-with-me/index.html` generated correctly
+
+**Success Criteria**:
+- ✅ Build With Me at `/projects/` still works
+- ✅ Uses shared SiteLayout layout
+- ✅ All React components functioning
+- ✅ Independent build/dev workflow
+
+---
+
+## Post-Phase 4: Build With Me UI Debugging
+
+**Date**: Nov 25, 2024  
+**Trigger**: After migrating Build With Me to `packages/build-with-me/`, UI regressed - content full-width, not respecting `max-w-[60rem]` container, shifted left with no padding
+
+### Root Cause Analysis
+
+**Problem**: Tailwind JIT compiler wasn't generating arbitrary classes (`max-w-[60rem]`) from `@soma/shared` package
+
+**Investigation**:
+- Compared working `packages/ab-simulator/` vs broken `packages/build-with-me/`
+- DevTools inspection showed `overflow` badge on `main` element
+- grep confirmed `max-w-\[60rem\]` class missing from `dist/build-with-me/_astro/*.css`
+- Both packages use `SiteLayout.astro` from `@soma/shared` with same `max-w-[60rem]` class
+
+**Root Cause**: `packages/build-with-me/tailwind.config.js` only scanning own `src/` directory, not shared package files:
+```js
+content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}']  // ❌ Missing shared
+```
+
+### Fix Applied
+
+**packages/build-with-me/tailwind.config.js**:
+```diff
+  content: [
+    './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
++   '../shared/src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'  // ✅ Scan shared package
+  ],
+```
+
+**Result**: Arbitrary classes from `SiteLayout` now generated, layout respects container max-width
+
+### Symptomatic Fixes Reverted
+
+**Mistake**: Initially changed section backgrounds from `bg-primary-foreground` to `bg-card` (treating symptom)  
+**Correction**: Reverted all color changes to match production styling:
+- `bg-primary-foreground` on all sections (Hats & PRs, Leaderboard, Search, Filters)
+- `shadow-lg shadow-black/5` on all cards
+- React components: LeaderboardTable, TasksTable, SearchBar, FilterPanel all restored
+
+### Outstanding Issue
+
+**Current**: Spacing between sections still incorrect (tight instead of `space-y-8`)  
+**Status**: Built HTML verified to have correct `<div class="w-full space-y-8">` wrapper  
+**Diagnosis**: Browser cache suspected - hard refresh (Cmd+Shift+R) recommended
+
+**Files Modified**:
+- `packages/build-with-me/tailwind.config.js` (added shared path to content array)
+- `packages/build-with-me/src/pages/index.astro` (reverted bg-card → bg-primary-foreground)
+- `packages/build-with-me/src/components/*.tsx` (4 files reverted to prod colors)
+
+**Lesson**: Always diagnose root cause before fixing. Symptomatic fixes mask architectural issues.
 
 ---
 

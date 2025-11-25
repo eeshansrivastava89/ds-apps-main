@@ -1,0 +1,692 @@
+{
+  "cycles": [
+    {
+      "slug": "ab-sim",
+      "name": "A/B Simulator",
+      "phase": "Active",
+      "openTasks": 0,
+      "claimed": 1,
+      "mergedThisWeek": 13,
+      "highlight": "13 tasks merged"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "14",
+      "title": "Reduce ab-test-simulator.astro from 600 to 170 lines",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:astro",
+        "hours:3-5"
+      ],
+      "skills": [
+        "astro"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/14",
+      "updatedAt": "2025-11-25T05:47:09Z",
+      "closedAt": "2025-11-25T05:47:07Z"
+    },
+    {
+      "id": "13",
+      "title": "Real-time dashboard optimization with Plotly charts",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:react",
+        "hours:3-5"
+      ],
+      "skills": [
+        "react"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/13",
+      "updatedAt": "2025-11-25T05:47:04Z",
+      "closedAt": "2025-11-25T05:47:02Z"
+    },
+    {
+      "id": "12",
+      "title": "Build With Me platform overhaul with React components",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:react",
+        "learn:tailwind",
+        "hours:6+"
+      ],
+      "skills": [
+        "react",
+        "tailwind"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/12",
+      "updatedAt": "2025-11-25T05:46:59Z",
+      "closedAt": "2025-11-25T05:46:57Z"
+    },
+    {
+      "id": "11",
+      "title": "Set up pnpm workspaces monorepo architecture",
+      "projectSlug": "ab-sim",
+      "category": [
+        "wiring"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:wiring",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:git",
+        "hours:6+"
+      ],
+      "skills": [
+        "git"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/11",
+      "updatedAt": "2025-11-25T05:46:54Z",
+      "closedAt": "2025-11-25T05:46:52Z"
+    },
+    {
+      "id": "10",
+      "title": "Build With Me page with GitHub Issues integration",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:react",
+        "learn:astro",
+        "hours:6+"
+      ],
+      "skills": [
+        "react",
+        "astro"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/10",
+      "updatedAt": "2025-11-25T05:46:49Z",
+      "closedAt": "2025-11-25T05:46:47Z"
+    },
+    {
+      "id": "9",
+      "title": "Add analytics notebooks with Supabase health checks",
+      "projectSlug": "ab-sim",
+      "category": [
+        "analytics"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:analytics",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:python",
+        "learn:sql",
+        "hours:3-5"
+      ],
+      "skills": [
+        "python",
+        "sql"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/9",
+      "updatedAt": "2025-11-25T05:46:45Z",
+      "closedAt": "2025-11-25T05:46:43Z"
+    },
+    {
+      "id": "8",
+      "title": "Consolidate A/B simulator JS into modular ES6 structure",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:typescript",
+        "hours:6+"
+      ],
+      "skills": [
+        "typescript"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/8",
+      "updatedAt": "2025-11-25T05:46:40Z",
+      "closedAt": "2025-11-25T05:46:38Z"
+    },
+    {
+      "id": "7",
+      "title": "Add CI smoke tests for Supabase RPC health checks",
+      "projectSlug": "ab-sim",
+      "category": [
+        "wiring"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:wiring",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:git",
+        "hours:3-5"
+      ],
+      "skills": [
+        "git"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/7",
+      "updatedAt": "2025-11-25T05:46:35Z",
+      "closedAt": "2025-11-25T05:46:33Z"
+    },
+    {
+      "id": "6",
+      "title": "Migrate dashboard to Supabase PostgREST (remove FastAPI)",
+      "projectSlug": "ab-sim",
+      "category": [
+        "backend"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:backend",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:sql",
+        "hours:6+"
+      ],
+      "skills": [
+        "sql"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/6",
+      "updatedAt": "2025-11-25T05:46:31Z",
+      "closedAt": "2025-11-25T05:46:29Z"
+    },
+    {
+      "id": "5",
+      "title": "Build memory game with multiple puzzle variants",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:hard",
+        "project:ab-sim",
+        "learn:react",
+        "hours:6+"
+      ],
+      "skills": [
+        "react"
+      ],
+      "estimatedHours": "6+",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/5",
+      "updatedAt": "2025-11-25T05:46:27Z",
+      "closedAt": "2025-11-25T05:46:25Z"
+    },
+    {
+      "id": "4",
+      "title": "Implement global leaderboard with unique-names-generator",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:frontend",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:react",
+        "hours:3-5"
+      ],
+      "skills": [
+        "react"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/4",
+      "updatedAt": "2025-11-25T05:46:22Z",
+      "closedAt": "2025-11-25T05:46:20Z"
+    },
+    {
+      "id": "3",
+      "title": "Set up PostHog reverse proxy via Cloudflare Worker",
+      "projectSlug": "ab-sim",
+      "category": [
+        "wiring"
+      ],
+      "status": "merged",
+      "difficulty": "medium",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:wiring",
+        "diff:medium",
+        "project:ab-sim",
+        "learn:typescript",
+        "hours:3-5"
+      ],
+      "skills": [
+        "typescript"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/3",
+      "updatedAt": "2025-11-25T05:46:17Z",
+      "closedAt": "2025-11-25T05:46:15Z"
+    },
+    {
+      "id": "2",
+      "title": "Migrate to monorepo architecture with pnpm workspaces",
+      "projectSlug": "ab-sim",
+      "category": [
+        "wiring"
+      ],
+      "status": "merged",
+      "difficulty": "hard",
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "cat:wiring",
+        "diff:hard",
+        "project:ab-sim"
+      ],
+      "skills": [],
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/2",
+      "updatedAt": "2025-11-24T15:05:08Z",
+      "closedAt": "2025-11-24T15:05:08Z"
+    },
+    {
+      "id": "1",
+      "title": "create build with me page instead of projects",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "claimed",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "labels": [
+        "enhancement",
+        "good first issue",
+        "cat:frontend",
+        "learn:react",
+        "learn:astro",
+        "hours:3-5"
+      ],
+      "skills": [
+        "react",
+        "astro"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": true,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/1",
+      "updatedAt": "2025-11-25T05:34:09Z",
+      "closedAt": null
+    }
+  ],
+  "hats": [
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "wiring"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "analytics"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "wiring"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "backend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "wiring"
+      ],
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "claimed"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "mergedPRs": 12,
+      "reviews": 0,
+      "recentActivityCount": 10
+    }
+  ],
+  "recentActivity": [
+    {
+      "type": "merged",
+      "taskId": "14",
+      "taskTitle": "Reduce ab-test-simulator.astro from 600 to 170 lines",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:47:07Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/14"
+    },
+    {
+      "type": "merged",
+      "taskId": "13",
+      "taskTitle": "Real-time dashboard optimization with Plotly charts",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:47:02Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/13"
+    },
+    {
+      "type": "merged",
+      "taskId": "12",
+      "taskTitle": "Build With Me platform overhaul with React components",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:57Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/12"
+    },
+    {
+      "type": "merged",
+      "taskId": "11",
+      "taskTitle": "Set up pnpm workspaces monorepo architecture",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:52Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/11"
+    },
+    {
+      "type": "merged",
+      "taskId": "10",
+      "taskTitle": "Build With Me page with GitHub Issues integration",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:47Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/10"
+    },
+    {
+      "type": "merged",
+      "taskId": "9",
+      "taskTitle": "Add analytics notebooks with Supabase health checks",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:43Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/9"
+    },
+    {
+      "type": "merged",
+      "taskId": "8",
+      "taskTitle": "Consolidate A/B simulator JS into modular ES6 structure",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:38Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/8"
+    },
+    {
+      "type": "merged",
+      "taskId": "7",
+      "taskTitle": "Add CI smoke tests for Supabase RPC health checks",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:33Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/7"
+    },
+    {
+      "type": "merged",
+      "taskId": "6",
+      "taskTitle": "Migrate dashboard to Supabase PostgREST (remove FastAPI)",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:29Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/6"
+    },
+    {
+      "type": "merged",
+      "taskId": "5",
+      "taskTitle": "Build memory game with multiple puzzle variants",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T05:46:25Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/5"
+    }
+  ],
+  "lastFetchTime": "2025-11-25T07:25:44.423Z"
+}

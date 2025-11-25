@@ -1,0 +1,168 @@
+---
+import SiteLayout from '@soma/shared/layouts/SiteLayout.astro'
+import TasksView from '../components/TasksView'
+import ContributorCards from '../components/ContributorCards'
+import ActivityFeed from '../components/ActivityFeed'
+import StartHereGuide from '../components/StartHereGuide'
+import VideoModal from '../components/VideoModal'
+import { validateBuildWithMeData } from '../lib/validate-build-with-me'
+
+// Data source (overwritten by fetch script). Keep defaults for local preview.
+import buildWithMeData from '../data/build-with-me-data.json'
+
+const validatedData = validateBuildWithMeData(buildWithMeData)
+if (!validatedData) {
+	throw new Error('Invalid build-with-me-data.json. Run: npm run fetch:build-with-me')
+}
+
+const { tasks, contributors, recentActivity } = validatedData
+
+// Compute stats for hero
+const totalContributors = contributors.length
+const mergedCount = tasks.filter(t => t.status === 'merged').length
+const openCount = tasks.filter(t => t.status === 'open').length
+---
+
+<SiteLayout meta={{ title: 'Build with Me' }}>
+	<div class='w-full space-y-8'>
+		<!-- Start Here Guide for new contributors -->
+		<StartHereGuide client:load />
+
+		<section class='space-y-4'>
+			<p class='text-xs font-semibold uppercase tracking-[0.3em] text-primary'>Build with Me</p>
+			
+			<!-- Hero: Left content + Right video -->
+			<div class='grid gap-6 lg:grid-cols-[1fr_320px]'>
+				<div class='space-y-4'>
+					<h1 class='text-2xl font-bold text-foreground sm:text-4xl'>Ship Real Code. Build Your Portfolio.</h1>
+					<p class='max-w-2xl text-base text-muted-foreground'>
+						Claim a task, open a PR, get code review, and ship. Real projects, real GitHub history, zero cost.
+					</p>
+					
+					<!-- Stats bar -->
+					<div class='flex flex-wrap gap-4 text-sm'>
+						<div class='flex items-center gap-1.5'>
+							<span class='font-bold text-foreground'>{totalContributors}</span>
+							<span class='text-muted-foreground'>contributors</span>
+						</div>
+						<div class='flex items-center gap-1.5'>
+							<span class='font-bold text-emerald-600'>{mergedCount}</span>
+							<span class='text-muted-foreground'>PRs merged</span>
+						</div>
+						<div class='flex items-center gap-1.5'>
+							<span class='font-bold text-orange-500'>{openCount}</span>
+							<span class='text-muted-foreground'>open tasks</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Video thumbnail -->
+				<div class='hidden lg:block'>
+					<VideoModal client:load />
+				</div>
+			</div>
+
+			<!-- Quick nav button bar -->
+			<div class='flex flex-wrap items-center gap-2 border-t border-border pt-4'>
+				<a
+					href='#open-work'
+					class='rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-orange-400'
+				>
+					Open Work
+				</a>
+				<a
+					href='#contributors'
+					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
+				>
+					Contributors
+				</a>
+				<a
+					href='#how-to'
+					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
+				>
+					How to Ship
+				</a>
+				<a
+					href='#faq'
+					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
+				>
+					FAQ
+				</a>
+				<!-- Mobile video link -->
+				<div class='lg:hidden'>
+					<VideoModal client:load />
+				</div>
+			</div>
+		</section>
+
+		<section>
+			<ActivityFeed activities={recentActivity} client:load />
+		</section>
+
+		<section id='open-work' class='space-y-4' aria-label='Open work'>
+			<div>
+				<h2 class='text-2xl font-bold text-foreground'>Open Work</h2>
+				<p class='text-sm text-muted-foreground'>Pick a task, claim an issue, and ship.</p>
+			</div>
+			<TasksView tasks={tasks} client:load />
+		</section>
+
+		<section id='contributors' aria-label='Contributors'>
+			<ContributorCards contributors={contributors} tasks={tasks} client:load />
+		</section>
+
+		<section id='how-to' class='grid gap-4 lg:grid-cols-[2fr_1fr]'>
+			<div class='rounded-2xl border border-border bg-primary-foreground p-4 shadow-lg shadow-black/5'>
+				<h2 class='text-xl font-semibold text-foreground'>How to Ship</h2>
+				<ol class='mt-3 list-decimal space-y-3 pl-5 text-sm text-muted-foreground'>
+					<li>
+						<span class='font-semibold text-foreground'>Claim the issue:</span> comment on GitHub to
+						reserve your slot; unclaimed issues are fair game.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Branch naming:</span>
+						<code class='rounded bg-slate-900 px-2 py-1 text-[11px]'>feature/your-handle-topic</code
+						>.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Setup env:</span> add PostHog + Supabase keys;
+						run
+						<code class='rounded bg-slate-900 px-2 py-1 text-[11px]'>npm run dev</code>.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Validate:</span> play the flow, keep console
+						clean, lint if you touch TS/JS.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>PR template:</span> include summary, screenshots/gifs
+						for UI, checklist for tracking changes.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Optional:</span> add a 30–60s Loom demo for reviewers.
+					</li>
+				</ol>
+			</div>
+			<div id='faq' class='rounded-2xl border border-border bg-primary-foreground p-4 shadow-lg shadow-black/5'>
+				<h2 class='text-xl font-semibold text-foreground'>FAQ & Compliance</h2>
+				<ul class='mt-3 space-y-2 text-sm text-muted-foreground'>
+					<li>
+						<span class='font-semibold text-foreground'>Non-commercial:</span> personal educational project.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Time:</span> issues marked for scope; async friendly.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Stack:</span> Astro, Tailwind, PostHog, Supabase/PostgREST,
+						Plotly.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Taken issue?</span> pick another or waitlist
+						in comments.
+					</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+</SiteLayout>
+
+
