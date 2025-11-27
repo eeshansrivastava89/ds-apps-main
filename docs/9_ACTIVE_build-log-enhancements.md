@@ -1,76 +1,33 @@
 # Build Log Enhancements
 
-**Goal**: Reframe `/build-with-me/` → `/build-log/` as solo-first learning journey with optional contribution.
-
 **Package location**: `packages/build-log/`
 
 ---
 
-## Prioritized Enhancement List
+## Phase 1: Initial Build Log Page ✅
 
-| Rank | Enhancement | Why It Matters | Effort | Status | Issue |
-|------|-------------|----------------|--------|--------|-------|
-| **1** | **Activity Feed** — Recent claims/merges/opens with avatars | Creates momentum, social proof. | Medium | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **2** | **Hero Rewrite** — Stats bar, manifesto copy, video CTA | First impression sells the vision. | Low | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **3** | **Task Enrichment** — "You'll Learn" tags, "Good First Issue" badge | Makes tasks interesting. | Medium | ✅ Done | [#12](https://github.com/eeshansrivastava89/soma-portfolio/issues/12) |
-| **4** | **Recently Merged / Shoutouts** — Contributor credit | Public credit = motivation. | Low | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **5** | **Leaderboard Upgrades** — Streak indicators | Gamification drives return visits. | Medium | ✅ Done | [#12](https://github.com/eeshansrivastava89/soma-portfolio/issues/12) |
-| **6** | **Filter Pills** — Quick filters | Reduces friction. | Low | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **7** | **Start Here Guide** — Collapsible onboarding | Answers "how do I start?" | Low | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **8** | **Video Modal** — Overlay player | Visual learners. | Medium | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **9** | **Quick Nav Bar** — Section links | Navigation + scanability. | Low | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **10** | **Mobile Polish** — Responsive fixes | Critical for social sharing. | Medium | ✅ Done | [#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15) |
-| **11** | **Route Rename** — `/build-with-me/` → `/build-log/` | Matches new branding. | Low | ✅ Done | [#23](https://github.com/eeshansrivastava89/soma-portfolio/issues/23) |
-| **12** | **Build Log Reframe** — Reorder: Hero → Projects → Learnings → Contribute | 80/20 split. | Medium | ✅ Done | [#24](https://github.com/eeshansrivastava89/soma-portfolio/issues/24) |
-| **13** | **Latest Learnings Section** — Blog post links | Content is the engine. | Low | ✅ Done | [#25](https://github.com/eeshansrivastava89/soma-portfolio/issues/25) |
-| **14** | **Current Projects Section** — What's live, stats | Showcase before asking for help. | Low | ✅ Done | [#26](https://github.com/eeshansrivastava89/soma-portfolio/issues/26) |
-| **15** | **Hero Copy Update** — "The Build Log" framing | Solo-first, AI-native. | Low | ✅ Done | [#27](https://github.com/eeshansrivastava89/soma-portfolio/issues/27) |
-| **16** | **PostHog Tracking [Later]** — CTA clicks, scroll | Data to optimize. | Low | ⬜ Later | — |
-| **17** | **Learnings YAML + Schema** — Data file with VS Code auto-complete | Single source of truth for posts. | Low | ⬜ Not started | [#28](https://github.com/eeshansrivastava89/soma-portfolio/issues/28) |
-| **18** | **Learnings Timeline Component** — Timeline view with type badges | Shows continuity + frequency. | Medium | ⬜ Not started | [#29](https://github.com/eeshansrivastava89/soma-portfolio/issues/29) |
-| **19** | **Learnings Filter + Pagination** — Project filter pills, 10/page | Scales as content grows. | Medium | ⬜ Not started | [#30](https://github.com/eeshansrivastava89/soma-portfolio/issues/30) |
-| **20** | **Contribute Page** — Move contribution sections to `/build-log/contribute/` | Keeps Build Log focused on journey. | Medium | ⬜ Not started | [#31](https://github.com/eeshansrivastava89/soma-portfolio/issues/31) |
-| **21** | **Header Nav Update** — Add "Contribute" link | Discoverable contribution path. | Low | ⬜ Not started | [#32](https://github.com/eeshansrivastava89/soma-portfolio/issues/32) |
+**Goal:** Build the contributor-focused `/build-with-me/` page with gamification and social proof.
 
----
-
-## Progress Log
-
-### Build Log 80/20 Reframe ✅
-**Completed:** 2025-11-27
-
-**Summary:** Restructured page with solo-first messaging (80%) before contribution section (20%).
-
-**Changes:**
-- Hero: New solo-first copy + CTAs ("See Current Project" / "Want to Contribute?")
-- Added "What I'm Building" section with A/B Simulator card
-- Added "What I've Learned" section (empty state for now)
-- Moved contribution section below with border separator
-- Stats bar moved to contribute section header
-
-### Route Rename Complete ✅
-**Completed:** 2025-11-27
-
-**Summary:** Full rename from `build-with-me` → `build-log` including folder, package name, and all internal references.
-
-**Changes:**
-- Renamed folder: `packages/build-with-me/` → `packages/build-log/`
-- Package name: `@soma/build-with-me` → `@soma/build-log`
-- Astro config: `base: '/build-log'`, `outDir: '../../dist/build-log'`
-- Dockerfile: Added `/build-log/` nginx location block
-- Root package.json: `dev:bwm` → `dev:build-log`
-- Header.astro: Nav link updated to `/build-log`
-- Internal files renamed:
-  - `build-with-me-config.js/ts` → `build-log-config.js/ts`
-  - `build-with-me-data.json` → `build-log-data.json`
-  - `validate-build-with-me.ts` → `validate-build-log.ts`
-  - `BuildWithMeView.tsx` → `BuildLogView.tsx`
-- All imports updated across 10+ component files
-
-### Major Redesign: Design Consolidation ✅
 **Completed:** 2025-11-25
 
-**Summary:** Consolidated 3 sections into unified `ContributorCards`. Removed competitive elements.
+### Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| **Activity Feed** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Recent claims/merges/opens with avatars | ✅ Done |
+| **Hero Rewrite** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Stats bar, manifesto copy, video CTA | ✅ Done |
+| **Task Enrichment** ([#12](https://github.com/eeshansrivastava89/soma-portfolio/issues/12)) | "You'll Learn" tags, "Good First Issue" badge | ✅ Done |
+| **Recently Merged / Shoutouts** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Contributor credit | ✅ Done |
+| **Leaderboard Upgrades** ([#12](https://github.com/eeshansrivastava89/soma-portfolio/issues/12)) | Streak indicators | ✅ Done |
+| **Filter Pills** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Quick filters | ✅ Done |
+| **Start Here Guide** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Collapsible onboarding | ✅ Done |
+| **Video Modal** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Overlay player | ✅ Done |
+| **Quick Nav Bar** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Section links | ✅ Done |
+| **Mobile Polish** ([#15](https://github.com/eeshansrivastava89/soma-portfolio/issues/15)) | Responsive fixes | ✅ Done |
+
+### Progress Log
+
+Consolidated 3 sections into unified `ContributorCards`. Removed competitive elements.
 
 **Key changes:**
 - `ContributorCards.tsx`: Unified contributor display
@@ -82,55 +39,134 @@
 
 ---
 
-## What's Next: Learnings Timeline + Contribute Page (Items 17-21)
+## Phase 2: Solo-First Reframe ✅
 
-### Learnings Timeline Architecture
+**Goal:** Reframe from contributor-focused to solo-first learning journey (80/20 split). Rename route to `/build-log/`.
 
-**Data source:** `packages/shared/src/data/learnings.yaml`
+**Completed:** 2025-11-27
 
-```yaml
-- title: "How I Built the A/B Simulator"
-  url: "/blog/how-i-built-the-ab-simulator"
-  type: blog  # blog | substack | doc | video
-  project: ab-sim
-  tags: [react, statistics, astro]
-  date: 2025-11-15
-  excerpt: "From idea to shipped product in 2 weeks..."
+### Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| **Route Rename** ([#23](https://github.com/eeshansrivastava89/soma-portfolio/issues/23)) | `/build-with-me/` → `/build-log/` | ✅ Done |
+| **Build Log Reframe** ([#24](https://github.com/eeshansrivastava89/soma-portfolio/issues/24)) | Reorder: Hero → Projects → Learnings → Contribute | ✅ Done |
+| **Latest Learnings Section** ([#25](https://github.com/eeshansrivastava89/soma-portfolio/issues/25)) | Blog post links section | ✅ Done |
+| **Current Projects Section** ([#26](https://github.com/eeshansrivastava89/soma-portfolio/issues/26)) | A/B Simulator card with status | ✅ Done |
+| **Hero Copy Update** ([#27](https://github.com/eeshansrivastava89/soma-portfolio/issues/27)) | "The Build Log" solo-first framing | ✅ Done |
+
+### Progress Log
+
+**Route Rename:**
+- Renamed folder: `packages/build-with-me/` → `packages/build-log/`
+- Package name: `@soma/build-with-me` → `@soma/build-log`
+- Astro config: `base: '/build-log'`, `outDir: '../../dist/build-log'`
+- Dockerfile: Added `/build-log/` nginx location block
+- All imports updated across 10+ component files
+
+**Page Restructure:**
+- Hero: New solo-first copy + CTAs ("See Current Project" / "Want to Contribute?")
+- Added "What I'm Building" section with A/B Simulator card
+- Added "What I've Learned" section
+- Moved contribution section below with border separator
+
+---
+
+## Phase 3: Learnings Infrastructure ✅
+
+**Goal:** Build YAML-based learnings data system with timeline component and filtering.
+
+**Completed:** 2025-11-27
+
+### Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| **Learnings YAML + Schema** ([#28](https://github.com/eeshansrivastava89/soma-portfolio/issues/28)) | YAML data file with JSON schema for VS Code | ✅ Done |
+| **Learnings Timeline** ([#29](https://github.com/eeshansrivastava89/soma-portfolio/issues/29)) | Timeline component with type badges | ✅ Done |
+| **Filter Pills + Pagination** ([#30](https://github.com/eeshansrivastava89/soma-portfolio/issues/30)) | Project filters, 10 items per page | ✅ Done |
+| **Contribute Page** ([#31](https://github.com/eeshansrivastava89/soma-portfolio/issues/31)) | Separate `/build-log/contribute/` page | ✅ Done |
+| **Contribute Nav Link** ([#32](https://github.com/eeshansrivastava89/soma-portfolio/issues/32)) | Add to header nav | ✅ Done |
+
+### Progress Log
+
+**New files:**
+- `packages/shared/src/data/learnings.yaml` — Data file with 2 seed entries
+- `packages/shared/src/data/learnings.schema.json` — JSON schema for VS Code autocomplete
+- `packages/shared/src/lib/learnings.ts` — TypeScript loader with types + helpers
+- `packages/build-log/src/components/LearningsTimeline.tsx` — Timeline component
+- `packages/build-log/src/pages/contribute/index.astro` — Dedicated contribute page
+
+**Features:**
+- Type badges: 📝 Blog, 📰 Substack, 📄 Doc, 🎥 Video
+- Featured items pinned to top
+- Project filter pills with counts
+- Built-in pagination (10 items per page)
+- Compact contribute CTA on main page
+
+---
+
+## Phase 4: Home Page Redesign ⬜
+
+**Goal:** Redesign home page to showcase Build Log as the main differentiator, with compact hero and clear CTAs.
+
+### Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| **Hero card redesign** ([#33](https://github.com/eeshansrivastava89/soma-portfolio/issues/33)) | Horizontal layout: photo left, name/tagline/socials right | ⬜ Not started |
+| **Build Log showcase** ([#34](https://github.com/eeshansrivastava89/soma-portfolio/issues/34)) | Current projects + learnings preview section | ⬜ Not started |
+| **Contribute CTA** ([#35](https://github.com/eeshansrivastava89/soma-portfolio/issues/35)) | Compact card with stats linking to /build-log/contribute | ⬜ Not started |
+| **Substack CTA** ([#36](https://github.com/eeshansrivastava89/soma-portfolio/issues/36)) | Keep orange styling, move to bottom | ⬜ Not started |
+| **Remove blog sections** ([#37](https://github.com/eeshansrivastava89/soma-portfolio/issues/37)) | Delete Latest Post + Explore by Topic | ⬜ Not started |
+| **Update tagline** ([#38](https://github.com/eeshansrivastava89/soma-portfolio/issues/38)) | New tagline in index.astro + about.astro | ⬜ Not started |
+
+### New Tagline
+
+**Old:** "Data science leader who likes to write, build and teach"
+
+**New:** "Data science leader building products with AI and writing about the journey"
+
+### Page Structure
+
 ```
+┌─────────────────────────────────────────────────────────────┐
+│  HERO CARD (full-width, compact)                            │
+│  ┌───────┐  Eeshan S.                                       │
+│  │ photo │  Data science leader building products with AI   │
+│  └───────┘  and writing about the journey                   │
+│             [GitHub] [LinkedIn] [X] [Substack]              │
+└─────────────────────────────────────────────────────────────┘
 
-**JSON Schema:** Added to `.vscode/settings.json` for auto-complete in VS Code.
+┌─────────────────────────────────────────────────────────────┐
+│  THE BUILD LOG (main showcase)                              │
+│  "Learning AI-native product development in public"         │
+│                                                             │
+│  ┌─────────────────┐  ┌─────────────────┐                   │
+│  │ A/B Simulator   │  │ What I've       │                   │
+│  │ ✅ Live         │  │ Learned         │                   │
+│  │ [Try It →]      │  │ (2 posts)       │                   │
+│  └─────────────────┘  └─────────────────┘                   │
+│                                                             │
+│  [Explore the Build Log →]                                  │
+└─────────────────────────────────────────────────────────────┘
 
-**Component:** `LearningsTimeline.tsx` (React for interactivity)
-- Timeline view with date headers
-- Type badges: 📝 Blog (orange), 📰 Substack (purple), 📄 Doc (blue), 🎥 Video (red)
-- Project filter pills at top (default: All)
-- Numbered pagination (10 items/page)
+┌─────────────────────────────────────────────────────────────┐
+│  WANT TO CONTRIBUTE? (compact CTA card)                     │
+│  Claim a task, open a PR, ship real code.                   │
+│  [X contributors] [Y open tasks] [See Open Tasks →]         │
+└─────────────────────────────────────────────────────────────┘
 
-**Reusable:** Same component on `/ab-simulator/` filtered to `project: ab-sim`.
-
-### Contribute Page
-
-**Route:** `/build-log/contribute/` (part of build-log sub-site)
-
-**Content moved from Build Log:**
-- Start Here Guide
-- Open Tasks (TasksTable)
-- Contributors (ContributorCards)
-- How to Ship / FAQ
-
-**Build Log keeps:**
-- Hero
-- Current Projects
-- Learnings Timeline
-- Small CTA: "Want to help? See open tasks →"
-
-**Header nav update:**
-```
-About   Blog   Build Log   Contribute
+┌─────────────────────────────────────────────────────────────┐
+│  NEWSLETTER (Substack CTA - orange styling)                 │
+│  Science of Experimentation & Analytics                     │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Backlog
 
-- **PostHog Tracking** — CTA clicks, scroll depth (item 16, deferred)
+| Task | Description | Status |
+|------|-------------|--------|
+| **PostHog Tracking** | CTA clicks, scroll depth | ⬜ Later |
