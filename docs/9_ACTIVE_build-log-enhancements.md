@@ -1,6 +1,6 @@
 # Build Log Enhancements
 
-**Package location**: `packages/build-log/`
+**Location**: `src/pages/build-log/` (merged into main site)
 
 ---
 
@@ -305,53 +305,81 @@ Removed rounded corners from 23 files across the site. Kept `rounded-full` only 
 
 ---
 
-## Phase 7: Merge Build-Log into Main Site 🔄
+## Phase 7: Merge Build-Log into Main Site ✅
 
 **Goal:** Eliminate `packages/build-log/` as a separate Astro app. Move pages into main site to enable direct content collection access and simplify architecture.
 
-**Issue:** [#49](https://github.com/eeshansrivastava89/soma-portfolio/issues/49) (Closes #48)
+**Completed:** 2025-11-29
 
-**Status:** In Progress
+**Issue:** [#49](https://github.com/eeshansrivastava89/soma-portfolio/issues/49) (Closes #48)
 
 ### Problem
 
-Build-log is a separate Astro app but needs:
+Build-log was a separate Astro app but needed:
 - Main site's content collection (`getCollection('post')`)
 - Shared layouts and components
 - No independent UI logic justifying separation
 
-This forces `learnings.yaml` duplication and complex build coordination.
+This forced `learnings.yaml` duplication and complex build coordination.
 
 ### Solution
 
 ```
-packages/build-log/          → DELETE
-src/pages/build-log/         → NEW (pages here)
-src/components/build-log/    → NEW (components here)
-scripts/fetch-build-log.mjs  → Move fetch script
+packages/build-log/          → DELETED
+src/pages/build-log/         → Pages now here
+src/components/build-log/    → Components now here
+scripts/fetch-build-log.mjs  → Standalone fetch script
+src/data/build-log-data.json → GitHub data
+src/lib/build-log-types.ts   → Types
+src/lib/build-log-config.ts  → Config
 ```
 
 ### Subtasks
 
 | Task | Description | Status |
 |------|-------------|--------|
-| Move pages | `src/pages/build-log/index.astro` + `contribute/` | ⬜ |
-| Move components | `src/components/build-log/` | ⬜ |
-| Move fetch script | `scripts/fetch-build-log.mjs` | ⬜ |
-| Move data file | `src/data/build-log-data.json` | ⬜ |
-| Update imports | Remove `../../../` paths | ⬜ |
-| Replace learnings.yaml | Use `getCollection('post')` directly | ⬜ |
-| Delete package | Remove `packages/build-log/` | ⬜ |
-| Update build scripts | Simplify `package.json` | ⬜ |
-| Update Dockerfile | Remove `/build-log` nginx block | ⬜ |
-| Verify & commit | Build + test all routes | ⬜ |
+| Move pages | `src/pages/build-log/index.astro` + `contribute/` | ✅ Done |
+| Move components | `src/components/build-log/` (10 React + 1 Astro) | ✅ Done |
+| Move fetch script | `scripts/fetch-build-log.mjs` (inline config) | ✅ Done |
+| Move data file | `src/data/build-log-data.json` | ✅ Done |
+| Update imports | Use `@/lib/*` and `@/data/*` aliases | ✅ Done |
+| Replace learnings.yaml | Use `getCollection('post')` with `project:*` tags | ✅ Done |
+| Delete package | Removed `packages/build-log/` entirely | ✅ Done |
+| Delete learnings system | Removed `learnings.yaml`, schema, and loader | ✅ Done |
+| Update build scripts | Simplified `package.json` prebuild | ✅ Done |
+| Verify & commit | Build passes, 19 pages generated | ✅ Done |
 
-### Expected Outcome
+### Progress Log
 
-- ✅ Direct content collection access (no learnings.yaml)
+**Commit:** `acd49ba`
+
+**Files Created:**
+- `src/pages/build-log/index.astro` — Uses `getCollection('post')` + PostList
+- `src/pages/build-log/contribute/index.astro` — Uses BuildLogView React component
+- `src/components/build-log/PostList.astro` — Replaces LearningsTimeline
+- `src/components/build-log/*.tsx` — 10 React components migrated
+- `src/lib/build-log-types.ts` — TypeScript types
+- `src/lib/build-log-config.ts` — Status/category styles
+- `scripts/fetch-build-log.mjs` — Standalone fetch script
+
+**Files Deleted:**
+- Entire `packages/build-log/` folder
+- `packages/shared/src/data/learnings.yaml`
+- `packages/shared/src/data/learnings.schema.json`
+- `packages/shared/src/lib/learnings.ts`
+
+**tsconfig.json Updates:**
+```json
+"@/lib/*": ["src/lib/*"],
+"@/data/*": ["src/data/*"]
+```
+
+### Outcome
+
+- ✅ Direct content collection access (no more learnings.yaml to maintain)
 - ✅ Simpler build (one Astro build)
-- ✅ Cleaner imports
-- ✅ ~500 lines deleted
+- ✅ Cleaner imports with path aliases
+- ✅ **-1091 lines net (902 added, 1993 deleted) = 54% reduction**
 
 ---
 
