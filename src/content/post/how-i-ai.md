@@ -4,7 +4,7 @@ description: 'A month building products with Claude changed how I work with AI. 
 publishDate: '2025-11-27'
 draft: false
 featured: true
-tags: ['ai', 'workflows', 'building', 'opinion']
+tags: ['project:general', 'ai', 'workflows', 'building', 'opinion']
 ---
 
 A month ago, I was using AI like most people: copy-paste a problem, get an answer, move on.

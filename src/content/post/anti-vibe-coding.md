@@ -4,6 +4,7 @@ description: Initial thoughts on how to resist trend-chasing AI demos and stay g
 publishDate: 2025-11-16
 draft: true
 tags:
+  - project:general
   - portfolio
   - series-ai
   - ai

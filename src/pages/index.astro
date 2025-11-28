@@ -19,30 +19,27 @@ const socialData = yaml.load(socialLinksYaml) as {
 }
 const socialLinks = socialData.socialLinks
 
-// Load build log data for stats
-import buildLogData from '../../packages/build-log/src/data/build-log-data.json'
+// Load build log data for stats (now in src/data)
+import buildLogData from '@/data/build-log-data.json'
 const totalContributors = buildLogData.contributors?.length ?? 0
 const openTasks = buildLogData.tasks?.filter((t: any) => t.status === 'open').length ?? 0
 
-// Load learnings count
-import { parseLearningsYaml } from '../../packages/shared/src/lib/learnings'
-import learningsYaml from '../../packages/shared/src/data/learnings.yaml?raw'
-const learnings = parseLearningsYaml(learningsYaml)
-const learningsCount = learnings.length
-
-// Load projects
-import { parseProjectsYaml } from '../../packages/shared/src/lib/projects'
-import projectsYaml from '../../packages/shared/src/data/projects.yaml?raw'
-import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
-const projects = parseProjectsYaml(projectsYaml)
-
-// Load featured posts
+// Load featured posts and learnings count
 import { getCollection } from 'astro:content'
 const allPosts = await getCollection('post', ({ data }) => !data.draft)
 const featuredPosts = allPosts
 	.filter((post) => post.data.featured)
 	.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
 	.slice(0, 3)
+
+// Get posts with project:* tags for learnings count
+const learningsCount = allPosts.filter(p => (p.data.tags || []).some((t: string) => t.startsWith('project:'))).length
+
+// Load projects
+import { parseProjectsYaml } from '../../packages/shared/src/lib/projects'
+import projectsYaml from '../../packages/shared/src/data/projects.yaml?raw'
+import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
+const projects = parseProjectsYaml(projectsYaml)
 ---
 
 <PageLayout meta={{ title: 'Home' }}>

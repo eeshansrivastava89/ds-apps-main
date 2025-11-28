@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { GitMerge, UserPlus, GitPullRequest, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
-import type { ActivityItem } from '../lib/validate-build-log'
+import type { ActivityItem } from '@/lib/build-log-types'
 
 interface ActivityFeedProps {
 	activities: ActivityItem[]
 	initialLimit?: number
 }
 
-const DEFAULT_LIMIT = 5
 const PAGE_SIZE = 5
 
 function timeAgo(timestamp: string): string {
@@ -27,14 +26,13 @@ function timeAgo(timestamp: string): string {
 
 function TimeAgo({ timestamp }: { timestamp: string }) {
 	const [time, setTime] = useState<string>('')
-	
+
 	useEffect(() => {
 		setTime(timeAgo(timestamp))
-		// Update every minute
 		const interval = setInterval(() => setTime(timeAgo(timestamp)), 60000)
 		return () => clearInterval(interval)
 	}, [timestamp])
-	
+
 	return <span>{time}</span>
 }
 
@@ -60,12 +58,10 @@ function activityVerb(type: ActivityItem['type']): string {
 	}
 }
 
-export default function ActivityFeed({ activities, initialLimit = DEFAULT_LIMIT }: ActivityFeedProps) {
+export default function ActivityFeed({ activities }: ActivityFeedProps) {
 	const [currentPage, setCurrentPage] = useState(0)
-	
-	if (activities.length === 0) {
-		return null
-	}
+
+	if (activities.length === 0) return null
 
 	const pageCount = Math.ceil(activities.length / PAGE_SIZE)
 	const startIndex = currentPage * PAGE_SIZE
@@ -80,26 +76,16 @@ export default function ActivityFeed({ activities, initialLimit = DEFAULT_LIMIT 
 			</div>
 			<div className='space-y-3'>
 				{displayedActivities.map((activity, idx) => (
-					<div
-						key={`${activity.taskId}-${activity.type}-${idx}`}
-						className='flex items-start gap-3'
-					>
-						{/* Avatar */}
+					<div key={`${activity.taskId}-${activity.type}-${idx}`} className='flex items-start gap-3'>
 						<div className='flex-shrink-0'>
 							{activity.avatarUrl ? (
-								<img
-									src={activity.avatarUrl}
-									alt={activity.user}
-									className='h-8 w-8 rounded-full border border-border'
-								/>
+								<img src={activity.avatarUrl} alt={activity.user} className='h-8 w-8 rounded-full border border-border' />
 							) : (
 								<div className='flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground'>
 									{activity.user.charAt(0).toUpperCase()}
 								</div>
 							)}
 						</div>
-
-						{/* Content */}
 						<div className='min-w-0 flex-1'>
 							<div className='flex items-center gap-2'>
 								<ActivityIcon type={activity.type} />
@@ -108,18 +94,11 @@ export default function ActivityFeed({ activities, initialLimit = DEFAULT_LIMIT 
 									<span className='text-muted-foreground'> {activityVerb(activity.type)} </span>
 								</span>
 							</div>
-							<a
-								href={activity.githubUrl}
-								target='_blank'
-								rel='noreferrer'
-								className='group mt-0.5 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground'
-							>
+							<a href={activity.githubUrl} target='_blank' rel='noreferrer' className='group mt-0.5 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground'>
 								<span className='line-clamp-1'>#{activity.taskId} {activity.taskTitle}</span>
 								<ExternalLink className='h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100' />
 							</a>
 						</div>
-
-						{/* Timestamp */}
 						<div className='flex-shrink-0 text-xs text-muted-foreground'>
 							<TimeAgo timestamp={activity.timestamp} />
 						</div>
@@ -128,31 +107,15 @@ export default function ActivityFeed({ activities, initialLimit = DEFAULT_LIMIT 
 			</div>
 			{pageCount > 1 && (
 				<div className='mt-3 flex items-center justify-center gap-1'>
-					<button
-						onClick={() => setCurrentPage((p) => p - 1)}
-						disabled={currentPage === 0}
-						className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent'
-					>
+					<button onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 0} className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30'>
 						<ChevronLeft className='h-4 w-4' />
 					</button>
 					{Array.from({ length: pageCount }, (_, i) => (
-						<button
-							key={i}
-							onClick={() => setCurrentPage(i)}
-							className={`min-w-[32px] rounded px-2 py-1.5 text-xs font-medium transition ${
-								currentPage === i
-									? 'bg-foreground text-background'
-									: 'text-muted-foreground hover:bg-muted hover:text-foreground'
-							}`}
-						>
+						<button key={i} onClick={() => setCurrentPage(i)} className={`min-w-[32px] rounded px-2 py-1.5 text-xs font-medium transition ${currentPage === i ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}>
 							{i + 1}
 						</button>
 					))}
-					<button
-						onClick={() => setCurrentPage((p) => p + 1)}
-						disabled={currentPage === pageCount - 1}
-						className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent'
-					>
+					<button onClick={() => setCurrentPage((p) => p + 1)} disabled={currentPage === pageCount - 1} className='rounded p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-30'>
 						<ChevronRight className='h-4 w-4' />
 					</button>
 				</div>

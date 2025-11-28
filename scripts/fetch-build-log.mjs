@@ -1,22 +1,46 @@
 import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
 
-import {
-	CATEGORY_STYLES,
-	LABEL_CATEGORY_MAP,
-	LABEL_DIFFICULTY_MAP,
-	LABEL_PROJECT_MAP,
-	getProjectName
-} from '../src/data/build-log-config.js'
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Load .env from monorepo root
-dotenv.config({ path: path.join(process.cwd(), '../../.env') })
+// Inline config (was in build-log-config.js)
+const LABEL_CATEGORY_MAP = {
+	'cat:frontend': 'frontend',
+	'cat:backend': 'backend',
+	'cat:analytics': 'analytics',
+	'cat:wiring': 'wiring',
+	'cat:docs': 'docs'
+}
+
+const LABEL_DIFFICULTY_MAP = {
+	'diff:easy': 'easy',
+	'diff:medium': 'medium',
+	'diff:hard': 'hard'
+}
+
+const LABEL_PROJECT_MAP = {
+	'project:ab-sim': 'ab-sim',
+	'project:basketball': 'basketball'
+}
+
+const PROJECT_METADATA = {
+	'ab-sim': { name: 'A/B Simulator', path: '/ab-simulator' },
+	basketball: { name: 'Basketball Analyzer', path: '/basketball' }
+}
+
+function getProjectName(slug) {
+	return PROJECT_METADATA[slug]?.name ?? slug
+}
+
+// Load .env from repo root
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const REPO_OWNER = process.env.GITHUB_REPO_OWNER || 'eeshansrivastava89'
 const REPO_NAME = process.env.GITHUB_REPO_NAME || 'soma-portfolio'
-const OUTPUT_PATH = path.join(process.cwd(), 'src', 'data', 'build-log-data.json')
+const OUTPUT_PATH = path.join(__dirname, '..', 'src', 'data', 'build-log-data.json')
 
 if (!GITHUB_TOKEN) {
 	console.warn('⚠️  GITHUB_TOKEN not set - skipping Build Log data fetch')

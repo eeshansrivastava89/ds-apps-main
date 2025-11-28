@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { Search, X } from 'lucide-react'
-import type { Task } from '../lib/validate-build-log'
+import type { Task } from '@/lib/build-log-types'
 
 interface SearchBarProps {
 	tasks: Task[]
@@ -37,11 +37,7 @@ export default function SearchBar({ tasks, onFilteredTasks }: SearchBarProps) {
 				className='w-full border border-border bg-primary-foreground py-2 pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/50 focus:outline-none focus:ring-2 focus:ring-foreground/20'
 			/>
 			{query && (
-				<button
-					onClick={() => setQuery('')}
-					className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-					aria-label='Clear search'
-				>
+				<button onClick={() => setQuery('')} className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground' aria-label='Clear search'>
 					<X className='h-4 w-4' />
 				</button>
 			)}

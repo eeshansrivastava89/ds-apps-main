@@ -3,7 +3,8 @@ title: 'From Parameters to Product: How I Built the A/B Simulator'
 description: 'A technical deep-dive into pivoting from a data science blog to a full-stack product, and the architectural lessons learned along the way.'
 publishDate: '2025-11-22'
 draft: true
-tags: ['engineering', 'analytics', 'experiments', 'astro', 'supabase']
+featured: true
+tags: ['project:ab-sim', 'engineering', 'analytics', 'experiments', 'astro', 'supabase']
 ---
 
 I never intended to build a memory game.

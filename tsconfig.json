@@ -27,6 +27,12 @@
       ],
       "@/site-config": [
         "src/site.config.ts"
+      ],
+      "@/lib/*": [
+        "src/lib/*"
+      ],
+      "@/data/*": [
+        "src/data/*"
       ]
     },
     "jsx": "react-jsx",

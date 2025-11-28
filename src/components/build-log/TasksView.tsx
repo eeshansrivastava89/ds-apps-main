@@ -3,8 +3,7 @@ import { Sparkles, Clock, CircleDot } from 'lucide-react'
 import TasksTable from './TasksTable'
 import SearchBar from './SearchBar'
 import FilterPanel from './FilterPanel'
-import type { Task } from '../lib/validate-build-log'
-import type { Category, Status } from '../data/build-log-config'
+import type { Task, Category, Status } from '@/lib/build-log-types'
 
 interface TasksViewProps {
 	tasks: Task[]
@@ -25,7 +24,6 @@ export default function TasksView({ tasks }: TasksViewProps) {
 	const [quickFilters, setQuickFilters] = useState<Set<QuickFilter>>(new Set())
 	const [finalTasks, setFinalTasks] = useState<Task[]>(tasks)
 
-	// Sync when tasks prop changes (e.g., after refresh)
 	useEffect(() => {
 		setSearchFilteredTasks(tasks)
 	}, [tasks])
@@ -33,31 +31,20 @@ export default function TasksView({ tasks }: TasksViewProps) {
 	const toggleQuickFilter = (filter: QuickFilter) => {
 		setQuickFilters((prev) => {
 			const next = new Set(prev)
-			if (next.has(filter)) {
-				next.delete(filter)
-			} else {
-				next.add(filter)
-			}
+			if (next.has(filter)) next.delete(filter)
+			else next.add(filter)
 			return next
 		})
 	}
 
 	useEffect(() => {
 		let filtered = searchFilteredTasks
-
-		// Apply category filter
 		if (selectedCategories.length > 0) {
-			filtered = filtered.filter((task) =>
-				task.category.some((cat) => selectedCategories.includes(cat))
-			)
+			filtered = filtered.filter((task) => task.category.some((cat) => selectedCategories.includes(cat)))
 		}
-
-		// Apply status filter
 		if (selectedStatuses.length > 0) {
 			filtered = filtered.filter((task) => selectedStatuses.includes(task.status))
 		}
-
-		// Apply quick filters
 		if (quickFilters.has('good-first-issue')) {
 			filtered = filtered.filter((task) => task.isGoodFirstIssue)
 		}
@@ -67,7 +54,6 @@ export default function TasksView({ tasks }: TasksViewProps) {
 		if (quickFilters.has('open-only')) {
 			filtered = filtered.filter((task) => task.status === 'open')
 		}
-
 		setFinalTasks(filtered)
 	}, [tasks, searchFilteredTasks, selectedCategories, selectedStatuses, quickFilters])
 
@@ -77,41 +63,19 @@ export default function TasksView({ tasks }: TasksViewProps) {
 				<div className='flex-1'>
 					<SearchBar tasks={tasks} onFilteredTasks={setSearchFilteredTasks} key={tasks.length} />
 				</div>
-				<FilterPanel
-					selectedCategories={selectedCategories}
-					selectedStatuses={selectedStatuses}
-					onCategoryChange={setSelectedCategories}
-					onStatusChange={setSelectedStatuses}
-				/>
+				<FilterPanel selectedCategories={selectedCategories} selectedStatuses={selectedStatuses} onCategoryChange={setSelectedCategories} onStatusChange={setSelectedStatuses} />
 			</div>
-			{/* Quick filter pills */}
 			<div className='flex flex-wrap items-center gap-2'>
 				<span className='text-xs font-medium text-muted-foreground'>Quick filters:</span>
 				{QUICK_FILTERS.map(({ id, label, icon: Icon }) => {
 					const isActive = quickFilters.has(id)
 					return (
-						<button
-							key={id}
-							onClick={() => toggleQuickFilter(id)}
-							className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition ${
-								isActive
-									? 'bg-foreground text-background'
-									: 'border border-border bg-muted/50 text-muted-foreground hover:border-foreground/50 hover:text-foreground'
-							}`}
-						>
-							<Icon className='h-3 w-3' />
-							{label}
+						<button key={id} onClick={() => toggleQuickFilter(id)} className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition ${isActive ? 'bg-foreground text-background' : 'border border-border bg-muted/50 text-muted-foreground hover:border-foreground/50 hover:text-foreground'}`}>
+							<Icon className='h-3 w-3' />{label}
 						</button>
 					)
 				})}
-				{quickFilters.size > 0 && (
-					<button
-						onClick={() => setQuickFilters(new Set())}
-						className='text-xs text-muted-foreground hover:text-foreground'
-					>
-						Clear
-					</button>
-				)}
+				{quickFilters.size > 0 && <button onClick={() => setQuickFilters(new Set())} className='text-xs text-muted-foreground hover:text-foreground'>Clear</button>}
 			</div>
 			<TasksTable tasks={finalTasks} />
 		</div>

@@ -280,6 +280,81 @@ stats:
 
 ---
 
+## Phase 6: Sharp Editorial Design ✅
+
+**Goal:** Remove all rounded corners for a sharp, editorial aesthetic. Cards become rectangular, buttons get hard edges.
+
+**Completed:** 2025-11-28
+
+### Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| **Remove rounded corners** | Delete all `rounded-*` classes except `rounded-full` for circular elements | ✅ Done |
+
+### Progress Log
+
+**Commit:** `d8e9f11`
+
+Removed rounded corners from 23 files across the site. Kept `rounded-full` only for:
+- Profile images (circular)
+- Timeline dots
+- Icon containers
+
+**Files changed:** 23 files, net removal of decorative styling.
+
+---
+
+## Phase 7: Merge Build-Log into Main Site 🔄
+
+**Goal:** Eliminate `packages/build-log/` as a separate Astro app. Move pages into main site to enable direct content collection access and simplify architecture.
+
+**Issue:** [#49](https://github.com/eeshansrivastava89/soma-portfolio/issues/49) (Closes #48)
+
+**Status:** In Progress
+
+### Problem
+
+Build-log is a separate Astro app but needs:
+- Main site's content collection (`getCollection('post')`)
+- Shared layouts and components
+- No independent UI logic justifying separation
+
+This forces `learnings.yaml` duplication and complex build coordination.
+
+### Solution
+
+```
+packages/build-log/          → DELETE
+src/pages/build-log/         → NEW (pages here)
+src/components/build-log/    → NEW (components here)
+scripts/fetch-build-log.mjs  → Move fetch script
+```
+
+### Subtasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| Move pages | `src/pages/build-log/index.astro` + `contribute/` | ⬜ |
+| Move components | `src/components/build-log/` | ⬜ |
+| Move fetch script | `scripts/fetch-build-log.mjs` | ⬜ |
+| Move data file | `src/data/build-log-data.json` | ⬜ |
+| Update imports | Remove `../../../` paths | ⬜ |
+| Replace learnings.yaml | Use `getCollection('post')` directly | ⬜ |
+| Delete package | Remove `packages/build-log/` | ⬜ |
+| Update build scripts | Simplify `package.json` | ⬜ |
+| Update Dockerfile | Remove `/build-log` nginx block | ⬜ |
+| Verify & commit | Build + test all routes | ⬜ |
+
+### Expected Outcome
+
+- ✅ Direct content collection access (no learnings.yaml)
+- ✅ Simpler build (one Astro build)
+- ✅ Cleaner imports
+- ✅ ~500 lines deleted
+
+---
+
 ## Backlog
 
 | Task | Description | Status |
