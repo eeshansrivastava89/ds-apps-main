@@ -2,16 +2,17 @@
 
 projects:
   - id: ab-simulator
-    name: A/B Test Simulator
+    name: A/B Testing Memory Game
     url: /ab-simulator/
     status: live
     description: Interactive tool for learning A/B testing fundamentals. Run experiments, visualize statistical significance, and understand the math behind the scenes.
     shortDescription: Interactive tool for learning A/B testing fundamentals
     tags:
-      - name: Astro
-      - name: React
-      - name: Tailwind
+      - name: Astro / React / Tailwind
+      - name: Posthog
+      - name: Supabase
       - name: Plotly
+      - name: Python / Pandas / statsmodels
     stats:
       metrics:
         - key: games_played
@@ -21,3 +22,5 @@ projects:
           format: percent
         - key: winning_variant
           label: winning
+
+

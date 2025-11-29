@@ -13,6 +13,7 @@ const { tasks, contributors, recentActivity } = buildLogData
 
 const mergedCount = tasks.filter(t => t.status === 'merged').length
 const openCount = tasks.filter(t => t.status === 'open').length
+const contributorCount = contributors.length
 ---
 
 <BaseLayout meta={{ title: 'Contribute' }}>
@@ -23,10 +24,14 @@ const openCount = tasks.filter(t => t.status === 'open').length
 
       <div class='flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between'>
         <div class='space-y-4'>
-          <h1 class='text-2xl font-bold text-foreground sm:text-4xl'>Ship With Me</h1>
+          <h1 class='text-xl font-bold text-foreground sm:text-2xl'>Build With Me</h1>
           <p class='max-w-2xl text-base text-muted-foreground'>Claim a task, open a PR, get code review, and ship. Real projects, real GitHub history.</p>
 
           <div class='flex flex-wrap items-center gap-6 text-sm'>
+            <div class='flex items-center gap-1.5'>
+              <span class='text-2xl font-bold text-foreground'>{contributorCount}</span>
+              <span class='text-muted-foreground'>contributors</span>
+            </div>
             <div class='flex items-center gap-1.5'>
               <span class='text-2xl font-bold text-foreground'>{openCount}</span>
               <span class='text-muted-foreground'>open</span>

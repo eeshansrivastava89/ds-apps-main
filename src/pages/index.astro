@@ -23,6 +23,7 @@ const socialLinks = socialData.socialLinks
 import buildLogData from '@/data/build-log-data.json'
 const totalContributors = buildLogData.contributors?.length ?? 0
 const openTasks = buildLogData.tasks?.filter((t: any) => t.status === 'open').length ?? 0
+const closedTasks = buildLogData.tasks?.filter((t: any) => t.status === 'merged').length ?? 0
 
 // Load projects
 import { parseProjectsYaml } from '../../packages/shared/src/lib/projects'
@@ -51,7 +52,7 @@ const projects = parseProjectsYaml(projectsYaml)
 				<div class='flex flex-col items-center gap-4 sm:items-start'>
 					<div class='text-center sm:text-left'>
 						<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
-						<p class='mt-1 text-base text-muted-foreground'>
+						<p class='mt-1 text-lg text-muted-foreground'>
 							Data science leader building products with AI
 						</p>
 					</div>
@@ -86,11 +87,22 @@ const projects = parseProjectsYaml(projectsYaml)
 		</section>
 
 		<!-- ============================================ -->
-		<!-- WHAT I'M BUILDING                            -->
+		<!-- DATA SCIENCE BEYOND NOTEBOOKS                -->
 		<!-- ============================================ -->
 		<section class='mt-12 space-y-4'>
-			<h2 class='text-2xl font-bold text-foreground'>What I'm Building</h2>
-			
+			<h2 class='text-2xl font-bold text-foreground'>AI-Native Data Science Beyond Notebooks</h2>
+			<p class='text-base text-muted-foreground'>
+				With more than a decade in the data science field, I realized that the best way to learn isn't more notebooks or collecting more courses — it's building end-to-end. I'm building projects that force me to wear every hat: PM, engineer, architect, marketer, and finally the data scientist. 
+			</p>
+			<p class='text-base text-muted-foreground'>
+				You understand data differently when you built the system that created it. And when the insights from your analysis or predictions from your ML model improves the product, the loop starts again. 
+			</p>
+			<p class='text-base text-muted-foreground'>
+				<b>Startup mentality. The Build Loop.</b> AI handles the scaffolding; human does the thinking & planning.
+			</p>
+			<p class='text-base text-muted-foreground'>
+				As a leader, I can't ask my team to embrace new tools and workflows if I haven't experienced the learning curve myself. I build in my personal time—not to replace engineers, but to understand the tradeoffs firsthand. It makes me a better collaborator and a more credible leader.
+			</p>
 			<div class='space-y-3'>
 				{projects.map((project) => (
 					<ProjectCard project={project} variant='compact' />
@@ -99,25 +111,32 @@ const projects = parseProjectsYaml(projectsYaml)
 		</section>
 
 		<!-- ============================================ -->
-		<!-- JOIN THE BUILD                               -->
+		<!-- BUILD WITH ME                                -->
 		<!-- ============================================ -->
-		<section class='mt-16 border-t border-border/40 pt-12 space-y-4'>
-			<h2 class='text-2xl font-bold text-foreground'>Join the Build</h2>
+		<section class='mt-8 space-y-4'>
+			<h2 class='text-2xl font-bold text-foreground'>Build With Me</h2>
+			<p class='text-base text-muted-foreground'>These projects are hard. I do them in my personal time, leveraging AI workflows. Students in CS/DS or young pros interested in learning—join in, build, and teach me something in return.</p>
 			
-			<div class='flex flex-wrap items-center justify-between gap-4'>
-				<div class='space-y-1'>
-					<p class='text-sm text-muted-foreground'>Claim a task, open a PR, get code review, and ship. Real projects, real GitHub history.</p>
-					<div class='flex items-center gap-4 pt-1 text-sm'>
-						<span><span class='font-bold text-foreground'>{totalContributors}</span> <span class='text-muted-foreground'>contributors</span></span>
-						<span><span class='font-bold text-foreground'>{openTasks}</span> <span class='text-muted-foreground'>open tasks</span></span>
+			<div class='border border-border bg-background p-4 transition hover:border-foreground/30 hover:shadow-sm'>
+				<div class='flex items-center justify-between gap-3'>
+					<div class='flex flex-wrap gap-3'>
+						<span class='text-base text-muted-foreground'>
+							<span class='font-semibold text-foreground tabular-nums'>{totalContributors}</span> contributors
+						</span>
+						<span class='text-base text-muted-foreground'>
+							<span class='font-semibold text-foreground tabular-nums'>{openTasks}</span> open issues
+						</span>
+						<span class='text-base text-muted-foreground'>
+							<span class='font-semibold text-foreground tabular-nums'>{closedTasks}</span> closed issues
+						</span>
 					</div>
+					<a
+						href='/contribute/'
+						class='inline-flex shrink-0 items-center gap-1 bg-foreground px-3 py-1.5 text-xs font-semibold text-background shadow-sm transition hover:-translate-y-0.5 hover:bg-foreground/90'
+					>
+						See Open Tasks →
+					</a>
 				</div>
-				<a
-					href='/contribute/'
-					class='inline-flex shrink-0 items-center gap-2 bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-sm transition hover:-translate-y-0.5 hover:bg-foreground/90'
-				>
-					See Open Tasks →
-				</a>
 			</div>
 		</section>
 
