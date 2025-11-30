@@ -50,4 +50,13 @@ projects:
       - name: LLMs
       - name: Visualization
 
+  - id: mmm-explorer
+    name: Marketing Mix Modeling Explorer
+    url: '#'
+    status: coming-soon
+    shortDescription: Interactive tool for understanding MMM
+    tags: 
+      - name: marketing
+      - name: media-mix-model
+      - name: causal inference
 
