@@ -26,3 +26,6 @@ pnpm-debug.log*
 internal/
 docs/
 .github/instructions/
+
+# Python venv
+analytics/.venv/

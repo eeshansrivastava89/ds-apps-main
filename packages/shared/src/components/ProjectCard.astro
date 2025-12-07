@@ -154,8 +154,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
         if (!projectId) return
         
         try {
-          const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/v_project_stats?project_id=eq.${projectId}&select=*`,
+          // Fetch puzzle stats from webhook table view
+          const statsResponse = await fetch(
+            `${SUPABASE_URL}/rest/v1/v_ab_simulator_stats?select=*`,
             {
               headers: {
                 'apikey': SUPABASE_ANON_KEY,
@@ -164,11 +165,34 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
             }
           )
           
-          if (!response.ok) throw new Error('Failed to fetch')
+          const statsData = statsResponse.ok ? (await statsResponse.json())[0] : {}
           
-          const rows = await response.json()
-          const data = rows[0]
-          if (!data) return
+          // Fetch page views from batch table RPC
+          const pageViewsResponse = await fetch(
+            `${SUPABASE_URL}/rest/v1/rpc/page_views`,
+            {
+              method: 'POST',
+              headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                path_pattern: `/${projectId}%`,
+                days_back: 365
+              })
+            }
+          )
+          
+          let pageViews = 0
+          if (pageViewsResponse.ok) {
+            const pvData = await pageViewsResponse.json()
+            // Sum all matching paths
+            pageViews = pvData.reduce((sum, row) => sum + parseInt(row.views || 0, 10), 0)
+          }
+          
+          // Merge data
+          const data = { ...statsData, page_views: pageViews }
           
           // Update each stat value
           metrics.forEach((metric) => {

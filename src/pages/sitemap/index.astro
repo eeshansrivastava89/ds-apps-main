@@ -1,0 +1,252 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+
+// Get all posts
+const allPosts = await getCollection('post', ({ data }) => !data.draft)
+const sortedPosts = allPosts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+
+// Build site tree structure
+interface TreeNode {
+  name: string
+  path: string
+  children?: TreeNode[]
+  icon?: string
+  description?: string
+}
+
+const siteTree: TreeNode[] = [
+  {
+    name: 'Home',
+    path: '/',
+    icon: '🏠',
+    description: 'Portfolio landing page'
+  },
+  {
+    name: 'About',
+    path: '/about',
+    icon: '👤',
+    description: 'Background and experience'
+  },
+  {
+    name: 'Projects',
+    path: '/projects',
+    icon: '🚀',
+    description: 'Live projects and experiments',
+    children: [
+      {
+        name: 'A/B Simulator',
+        path: '/projects/ab-simulator',
+        icon: '📊',
+        description: 'Project hub with stats and docs'
+      }
+    ]
+  },
+  {
+    name: 'A/B Simulator Game',
+    path: '/ab-simulator',
+    icon: '🎮',
+    description: 'Interactive A/B testing game'
+  },
+  {
+    name: 'Stack',
+    path: '/stack',
+    icon: '🛠️',
+    description: 'Architecture and tech stack'
+  },
+  {
+    name: 'Writing',
+    path: '/writing',
+    icon: '✍️',
+    description: 'Blog posts and essays',
+    children: sortedPosts.map(post => ({
+      name: post.data.title,
+      path: `/writing/${post.slug}`,
+      icon: post.data.category === 'technical' ? '💻' : '💭',
+      description: post.data.description?.slice(0, 60) + (post.data.description && post.data.description.length > 60 ? '...' : '')
+    }))
+  },
+  {
+    name: 'Contribute',
+    path: '/contribute',
+    icon: '🤝',
+    description: 'How to follow and contribute'
+  },
+  {
+    name: 'Tools',
+    path: '/tools',
+    icon: '🧰',
+    description: 'Useful tools and resources'
+  },
+  {
+    name: 'Tags',
+    path: '/tags',
+    icon: '🏷️',
+    description: 'Browse content by tag'
+  },
+  {
+    name: 'RSS Feed',
+    path: '/rss.xml',
+    icon: '📡',
+    description: 'Subscribe to updates'
+  },
+  {
+    name: 'Visual Sitemap',
+    path: '/sitemap',
+    icon: '🗺️',
+    description: 'You are here'
+  }
+]
+
+// Count total pages
+const countNodes = (nodes: TreeNode[]): number => {
+  return nodes.reduce((sum, node) => {
+    return sum + 1 + (node.children ? countNodes(node.children) : 0)
+  }, 0)
+}
+const totalPages = countNodes(siteTree)
+---
+
+<BaseLayout meta={{ title: 'Visual Sitemap', description: 'Complete site structure and navigation' }}>
+  <article class="max-w-3xl mx-auto">
+    <!-- Back link -->
+    <a href="/" class="no-underline text-sm text-muted-foreground hover:text-foreground transition inline-flex items-center gap-1 mb-6">
+      ← Back to Home
+    </a>
+
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold mb-2 flex items-center gap-3">
+        <span class="text-3xl">🗺️</span>
+        Visual Sitemap
+      </h1>
+      <p class="text-muted-foreground">
+        Complete site structure • {totalPages} pages
+      </p>
+    </div>
+
+    <!-- Tree Container -->
+    <div class="relative rounded-xl border border-border bg-gradient-to-br from-background to-muted/20 p-6 shadow-sm">
+      <!-- Root node -->
+      <div class="flex items-center gap-3 mb-4 pb-4 border-b border-border">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 text-white text-lg shadow-md">
+          🌐
+        </div>
+        <div>
+          <span class="font-semibold text-foreground">eeshans.com</span>
+          <p class="text-xs text-muted-foreground">Portfolio & Data Science Projects</p>
+        </div>
+      </div>
+
+      <!-- Tree -->
+      <ul class="space-y-1 pl-2">
+        {siteTree.map((node, idx) => (
+          <li class="relative">
+            {/* Connector line */}
+            <div class="absolute left-[11px] top-0 h-full w-px bg-gradient-to-b from-border to-transparent" />
+            
+            {/* Node */}
+            <a 
+              href={node.path}
+              class="group relative flex items-start gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-accent/50 hover:shadow-sm"
+            >
+              {/* Branch connector */}
+              <div class="absolute left-0 top-[18px] h-px w-3 bg-border" />
+              
+              {/* Icon */}
+              <span class="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-sm shadow-sm ring-1 ring-border/50 transition-all group-hover:ring-accent group-hover:shadow-md">
+                {node.icon}
+              </span>
+              
+              {/* Content */}
+              <div class="min-w-0 flex-1 pt-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="font-medium text-foreground group-hover:text-accent transition-colors">
+                    {node.name}
+                  </span>
+                  <span class="text-xs text-muted-foreground font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                    {node.path}
+                  </span>
+                </div>
+                {node.description && (
+                  <p class="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                    {node.description}
+                  </p>
+                )}
+              </div>
+              
+              {/* Arrow */}
+              <svg class="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            
+            {/* Children */}
+            {node.children && node.children.length > 0 && (
+              <ul class="ml-6 mt-1 space-y-1 border-l border-dashed border-border/60 pl-4">
+                {node.children.map((child, childIdx) => (
+                  <li class="relative">
+                    {/* Branch connector */}
+                    <div class="absolute -left-4 top-[18px] h-px w-4 border-t border-dashed border-border/60" />
+                    
+                    <a 
+                      href={child.path}
+                      class="group relative flex items-start gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent/50 hover:shadow-sm"
+                    >
+                      {/* Icon */}
+                      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-muted/80 text-xs ring-1 ring-border/30 transition-all group-hover:ring-accent group-hover:shadow-sm">
+                        {child.icon}
+                      </span>
+                      
+                      {/* Content */}
+                      <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm text-foreground group-hover:text-accent transition-colors">
+                            {child.name}
+                          </span>
+                          <span class="text-xs text-muted-foreground font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                            {child.path}
+                          </span>
+                        </div>
+                        {child.description && (
+                          <p class="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                            {child.description}
+                          </p>
+                        )}
+                      </div>
+                      
+                      {/* Arrow */}
+                      <svg class="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Legend -->
+    <div class="mt-6 flex flex-wrap gap-4 text-xs text-muted-foreground">
+      <div class="flex items-center gap-1.5">
+        <span>💻</span> Technical
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span>💭</span> Essay
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span>📊</span> Project
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span>🎮</span> Interactive
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="mt-8 text-center text-xs text-muted-foreground">
+      Auto-generated at build time • Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+    </p>
+  </article>
+</BaseLayout>

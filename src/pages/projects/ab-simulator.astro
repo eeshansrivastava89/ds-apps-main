@@ -161,7 +161,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
     
     try {
       const response = await fetch(
-        `${supabaseUrl}/rest/v1/v_project_stats?project_id=eq.ab-simulator&select=*`,
+        `${supabaseUrl}/rest/v1/v_ab_simulator_stats?select=*`,
         {
           headers: {
             'apikey': supabaseKey,

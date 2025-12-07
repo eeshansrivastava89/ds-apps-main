@@ -23,6 +23,9 @@ projects:
           format: percent
         - key: winning_variant
           label: winning
+        - key: page_views
+          label: views
+          source: batch
     aiStory:
       - Claude + Cursor scaffolded the React game UI and Astro integration
       - GitHub Copilot handled repetitive refactors and test generation
