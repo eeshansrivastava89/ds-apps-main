@@ -282,6 +282,60 @@ Commit HTML to public/analysis/ → Fly deploys with fresh HTML
 | ✅ | "How I Built the A/B Simulator" post | Published - technical deep-dive |
 | ☐ | Launch announcement post | Draft below, ready for LinkedIn + Substack |
 
+### 6.3 UX Consolidation
+
+**Why:** Reduce friction, remove dead ends, create scannable single-scroll experience inspired by thariq.io simplicity.
+
+**UX Audit Findings:**
+- 5 nav items = too much cognitive load
+- `/tools` and `/tags` were orphaned pages (deleted)
+- `/about` used stale ProjectCard component (fixed)
+- Timeline repeated on 3 pages (Home, Projects, Stack)
+- Stack page target audience unclear
+- No sidebar for discovery (recent posts, tags)
+
+**Nav Change:**
+```
+Before: Home | About | Projects | Stack | Writing | Contribute
+After:  About | Projects | Writing | Contribute
+```
+
+**Page Structure:**
+
+```
+HOME (/)
+├── Hero (name, tagline, socials)
+├── Philosophy ("AI-Native DS Beyond Notebooks")
+├── Projects (compact cards + What's Next timeline)
+└── Build With Me (contribute CTA)
+
++ SIDEBAR (right column)
+├── Contribute CTA (top)
+├── Recent Posts
+├── Recent Analyses  
+└── Tags
+
+ABOUT (/about)
+├── Bio (compressed)
+├── Experience Timeline (visually compact, no cards/icons)
+├── Projects (compact)
+└── Stack (minified - just tech table, no architecture diagram)
+
+PROJECTS (/projects) — unchanged
+WRITING (/writing) — unchanged
+CONTRIBUTE (/contribute) — unchanged
+```
+
+| ✓ | Task | Notes |
+|---|------|-------|
+| ☐ | Remove "Home" from nav, reduce to 4 items | About, Projects, Writing, Contribute |
+| ☐ | Create `<Sidebar>` component | Contribute CTA, Recent Posts, Analyses, Tags |
+| ☐ | Add sidebar to Home page | Right column layout |
+| ☐ | Compress About page timeline | Remove cards/icons, tighter spacing |
+| ☐ | Add minified Stack section to About | Tech table only, link to full docs |
+| ☐ | Delete `/stack` as standalone page | Content moves to About |
+| ☐ | Update sitemap to reflect changes | Remove Stack, Tools, Tags |
+
 ---
 
 ## Launch Announcement Draft

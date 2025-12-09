@@ -24,6 +24,7 @@ import { parseProjectsYaml, getLiveProjects, getProjectsByStatus } from '../../p
 import projectsYaml from '../../packages/shared/src/data/projects.yaml?raw'
 import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
 import Timeline from '../../packages/shared/src/components/Timeline.astro'
+
 const allProjects = parseProjectsYaml(projectsYaml)
 const liveProjects = getLiveProjects(allProjects)
 const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
@@ -31,114 +32,97 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 ---
 
 <PageLayout meta={{ title: 'Home' }}>
-	<div class='flex w-full flex-col'>
+	<div class='w-full'>
 
 		<!-- ============================================ -->
 		<!-- HERO: Compact horizontal card                -->
 		<!-- ============================================ -->
-		<section class='border border-border bg-primary-foreground p-6 shadow-lg shadow-black/5'>
-			<div class='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
-				<!-- Profile Image -->
-				<Image
-					src={profile}
-					alt='profile photo'
-					class='h-28 w-28 shrink-0 rounded-full bg-[#FFBE98] p-1.5'
-					loading='eager'
-				/>
+			<section class='border border-border bg-primary-foreground p-6 shadow-lg shadow-black/5'>
+				<div class='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
+					<!-- Profile Image -->
+					<Image
+						src={profile}
+						alt='profile photo'
+						class='h-28 w-28 shrink-0 rounded-full bg-[#FFBE98] p-1.5'
+						loading='eager'
+					/>
 
-				<!-- Name + Tagline + Socials -->
-				<div class='flex flex-col items-center gap-4 sm:items-start'>
-					<div class='text-center sm:text-left'>
-						<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
-						<p class='mt-1 text-lg text-muted-foreground'>
-							Data science leader building products with AI
-						</p>
-					</div>
+					<!-- Name + Tagline + Socials -->
+					<div class='flex flex-col items-center gap-4 sm:items-start'>
+						<div class='text-center sm:text-left'>
+							<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
+							<p class='mt-1 text-lg text-muted-foreground'>
+								Data science leader building products with AI
+							</p>
+						</div>
 
-					<!-- Social Links + Newsletter -->
-					<div class='flex flex-wrap items-center gap-x-3 gap-y-3'>
-						{
-							socialLinks.map((link) => (
-								<a
-									href={link.url}
-									target='_blank'
-									class='flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-all hover:bg-input'
-									aria-label={link.label}
-								>
-									<Icon name={link.icon} class='h-4 w-4' />
-								</a>
-							))
-						}
-						<span class='text-muted-foreground'>|</span>
-						<a
-							href='https://scienceofexperimentation.substack.com'
-							target='_blank'
-							class='group flex items-center gap-2 text-sm'
-						>
-							<Icon name='simple-icons:substack' class='h-4 w-4 shrink-0' />
-							<span class='text-muted-foreground'>Science of Experimentation & Analytics</span>
-							<span class='font-medium text-foreground transition group-hover:translate-x-0.5'>Subscribe →</span>
-						</a>
+						<!-- Social Links + Newsletter -->
+						<div class='flex flex-wrap items-center gap-x-3 gap-y-3'>
+							{
+								socialLinks.map((link) => (
+									<a
+										href={link.url}
+										target='_blank'
+										class='flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-all hover:bg-input'
+										aria-label={link.label}
+									>
+										<Icon name={link.icon} class='h-4 w-4' />
+									</a>
+								))
+							}
+							<span class='text-muted-foreground'>|</span>
+							<a
+								href='https://scienceofexperimentation.substack.com'
+								target='_blank'
+								class='group flex items-center gap-2 text-sm'
+							>
+								<Icon name='simple-icons:substack' class='h-4 w-4 shrink-0' />
+								<span class='text-muted-foreground'>Science of Experimentation & Analytics</span>
+								<span class='font-medium text-foreground transition group-hover:translate-x-0.5'>Subscribe →</span>
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<!-- ============================================ -->
-		<!-- DATA SCIENCE BEYOND NOTEBOOKS                -->
-		<!-- ============================================ -->
-		<section class='mt-12 space-y-4'>
-			<h2 class='text-2xl font-bold text-foreground'>AI-Native Data Science Beyond Notebooks</h2>
-			<p class='text-base text-muted-foreground'>
-				With more than a decade in the data science field, I realized that the best way to learn isn't more notebooks or collecting more courses — it's building end-to-end. I'm building projects that force me to wear every hat: PM, engineer, architect, marketer, and finally the data scientist. 
-			</p>
-			<p class='text-base text-muted-foreground'>
-				You understand data differently when you built the system that created it. And when the insights from your analysis or predictions from your ML model improves the product, the loop starts again. 
-			</p>
-			<p class='text-base text-muted-foreground'>
-				<b>Startup mentality. The Build Loop.</b> AI handles the scaffolding; human does the thinking & planning.
-			</p>
-			<p class='text-base text-muted-foreground'>
-				As a leader, I can't ask my team to embrace new tools and workflows if I haven't experienced the learning curve myself. I build in my personal time—not to replace engineers, but to understand the tradeoffs firsthand. It makes me a better collaborator and a more credible leader.
-			</p>
-			<div class='space-y-3'>
-				{liveProjects.map((project) => (
-					<ProjectCard project={project} variant='compact' />
-				))}
-			</div>
-		</section>
+			<!-- ============================================ -->
+			<!-- PHILOSOPHY                                   -->
+			<!-- ============================================ -->
+			<section class='mt-10 space-y-4'>
+				<h2 class='text-2xl font-bold text-foreground'>Data Science beyond Notebooks</h2>
+				<p class='text-base text-muted-foreground'>
+					With more than a decade in the data science field, I realized that the best way to learn isn't more notebooks or collecting more courses — it's building end-to-end. I'm building projects that force me to wear every hat: PM, engineer, architect, marketer, and finally the data scientist. 
+				</p>
+				<p class='text-base text-muted-foreground'>
+					You understand data differently when you built the system that created it. And when the insights from your analysis or predictions from your ML model improves the product, the loop starts again. 
+				</p>
+				<p class='text-base text-muted-foreground'>
+					<b>Startup mentality. The Build Loop.</b> AI handles the scaffolding; human does the thinking & planning.
+				</p>
+				<p class='text-base text-muted-foreground'>
+					As a leader, I can't ask my team to embrace new tools and workflows if I haven't experienced the learning curve myself. I build in my personal time—not to replace engineers, but to understand the tradeoffs firsthand. It makes me a better collaborator and a more credible leader.
+				</p>
+			</section>
 
-		<!-- ============================================ -->
-		<!-- WHAT'S NEXT - VERTICAL TIMELINE              -->
-		<!-- ============================================ -->
-		<div class='mt-8'>
-			<Timeline 
-				inProgressProjects={inProgressProjects} 
-				upcomingProjects={upcomingProjects} 
-			/>
-		</div>
-
-		<!-- ============================================ -->
-		<!-- FOLLOW THE BUILD                             -->
-		<!-- ============================================ -->
-		<section class='mt-8 space-y-4'>
-			<h2 class='text-2xl font-bold text-foreground'>Follow the Build</h2>
-			<p class='text-base text-muted-foreground'>Solo project, built in public. Curious? Follow along or jump in.</p>
-			
-			<div class='border border-border bg-background p-4 transition hover:border-foreground/30 hover:shadow-sm'>
-				<div class='flex items-center justify-between gap-3'>
-					<p class='text-sm text-muted-foreground'>
-						See what I'm working on, browse open issues, or claim a task.
-					</p>
-					<a
-						href='/contribute/'
-						class='inline-flex shrink-0 items-center gap-1 bg-foreground px-3 py-1.5 text-xs font-semibold text-background shadow-sm transition hover:-translate-y-0.5 hover:bg-foreground/90'
-					>
-						Build With Me →
-					</a>
+			<!-- ============================================ -->
+			<!-- PROJECTS                                     -->
+			<!-- ============================================ -->
+			<section class='mt-10 space-y-4'>
+				<h2 class='text-2xl font-bold text-foreground'>Projects</h2>
+				<div class='space-y-3'>
+					{liveProjects.map((project) => (
+						<ProjectCard project={project} variant='compact' />
+					))}
 				</div>
-			</div>
-		</section>
+				
+				<!-- What's Next Timeline -->
+				<div class='mt-6'>
+					<Timeline 
+						inProgressProjects={inProgressProjects} 
+						upcomingProjects={upcomingProjects} 
+					/>
+				</div>
+			</section>
 
 	</div>
 </PageLayout>
