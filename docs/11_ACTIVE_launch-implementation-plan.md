@@ -164,9 +164,9 @@ eeshans.com/
 
 ---
 
-## Phase 5: Engagement + Distribution (Backlog)
+## Phase 5: Engagement + Distribution ✅ COMPLETE
 
-**Why:** Build social proof metrics for O-1 evidence. Consolidate content distribution.
+**Why:** Build social proof metrics for O-1 evidence.
 
 ### Content Architecture
 
@@ -186,15 +186,6 @@ LinkedIn (amplification)
 ```
 
 **Rule:** Write once on eeshans.com, cross-post to Substack (set canonical URL), promote on LinkedIn linking to eeshans.com.
-
-### Substack Cleanup
-
-| ✓ | Task | Notes |
-|---|------|-------|
-| ☐ | Remove multi-section nav | Kill "Stats & Experimentation", "Marketing & Media Measurement", etc. |
-| ☐ | Keep simple nav | Just "Home" and "About" |
-| ☐ | Update bio | "Full posts at eeshans.com" |
-| ☐ | Cross-post with canonical URL | Substack Settings → Post → Set canonical URL |
 
 ### Giscus Comments
 
@@ -218,7 +209,6 @@ LinkedIn (amplification)
 | ✅ | Add indexes on `posthog_batch_events` | pathname, timestamp, event+timestamp |
 | ✅ | Add "Like" button component | `LikeButton.astro` + `likes` table + `likes-webhook` edge function |
 | ✅ | Add view count to ProjectCard | Fetches from `page_views()` RPC, matches `/{projectId}%` paths |
-| ⏸️ | Create "Popular Posts" query | Backlog - Rank by `views + likes * 3` |
 
 **Issue:** [#93](https://github.com/eeshansrivastava89/ds-apps-main/issues/93)
 
@@ -306,9 +296,8 @@ HOME (/)
 
 ABOUT (/about)
 ├── Bio (compressed)
-├── Experience Timeline (visually compact)
-├── Projects (compact)
-└── Stack (minified tech table)
+├── Experience Timeline (blue dots for education, descriptions visible)
+└── Projects (compact, inline links)
 
 WRITING (/writing)
 ├── Single chronological list
@@ -324,9 +313,9 @@ CONTRIBUTE (/contribute) — unchanged
 | ✅ | Sidebar experiment | Attempted, reverted - squished main content |
 | ✅ | Newsletter integration | Custom form → opens Substack with email pre-filled |
 | ✅ | Brand consolidation | Unified as "Full Stack Data Scientist" |
-| ✅ | Compress About page timeline | WorkTimeline component |
-| ✅ | Add minified Stack section to About | Tech table only |
-| ✅ | Delete `/stack` as standalone page | Content consolidated into About |
+| ✅ | Compress About page timeline | WorkTimeline component, blue dots for education |
+| ✅ | Simplify About page | Removed Stack section entirely, simplified Projects to inline links |
+| ✅ | Delete `/stack` as standalone page | Content not carried forward (decided simpler was better) |
 | ✅ | Typography upgrade | Playfair Display + Lato, warm cream background |
 | ✅ | Simplify Writing page | Single list with category badges |
 | ✅ | Delete `/writing/technical/` and `/writing/essays/` | Categories now shown as badges |
@@ -361,6 +350,8 @@ API:
 | ✅ | Create `<Breadcrumbs>` component | Shared package, hybrid auto/explicit |
 | ✅ | Update all pages | BlogPost, writing, contribute, sitemap, about, projects, ab-simulator |
 | ✅ | Add smooth scroll | `scroll-smooth` on html for TOC navigation |
+| ✅ | WorkTimeline improvements | Blue dots for education entries, descriptions for past roles |
+| ✅ | Content differentiation | Philosophy (homepage) = concept, About = personal brief |
 
 ---
 
@@ -486,7 +477,8 @@ Hosting:
 | 2 | [#87 Project Hub + Game Polish](https://github.com/eeshansrivastava89/ds-apps-main/issues/87) | ✅ |
 | 3 | [#88 Contribute + Content](https://github.com/eeshansrivastava89/ds-apps-main/issues/88) | ✅ |
 | 4 | [#89 Stack + Documentation](https://github.com/eeshansrivastava89/ds-apps-main/issues/89) | ✅ |
-| 5 | [#91 Engagement + Distribution](https://github.com/eeshansrivastava89/ds-apps-main/issues/91) | In progress |
+| 5 | [#91 Engagement + Distribution](https://github.com/eeshansrivastava89/ds-apps-main/issues/91) | ✅ |
+| 6.3 | [#95 UX Consolidation](https://github.com/eeshansrivastava89/ds-apps-main/issues/95) | ✅ |
 
 ### Evidence Tracking
 
