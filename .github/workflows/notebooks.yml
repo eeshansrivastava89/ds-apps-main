@@ -103,9 +103,10 @@ jobs:
             --no-progress-bar \
             --log-output
           
-          # Convert to HTML
+          # Convert to HTML (with code cells visible)
           jupyter nbconvert "/tmp/${{ matrix.id }}-executed.ipynb" \
             --to html \
+            --template lab \
             --output "${{ matrix.id }}" \
             --output-dir "public/analysis/${{ matrix.outputPath }}"
           
