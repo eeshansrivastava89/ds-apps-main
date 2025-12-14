@@ -66,6 +66,11 @@ export async function getStaticPaths() {
 const { projectId, notebookId } = Astro.params
 const { project, notebookPath } = Astro.props
 
+// Guard - should never happen since getStaticPaths filters undefined projects
+if (!project) {
+  throw new Error(`Project not found: ${projectId}`)
+}
+
 // Derive title from notebook ID: ab-test-analysis -> A/B Test Analysis
 function formatTitle(id: string): string {
   return id
