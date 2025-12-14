@@ -36,7 +36,7 @@ ds-apps-main/
 │   └── styles/              # Global CSS (Tailwind + fonts)
 ├── packages/
 │   ├── ab-simulator/        # Standalone A/B testing game
-│   └── shared/              # Shared components, utils, projects.yaml
+│   └── shared/              # Shared components, utils, project configs
 ├── analytics/
 │   └── notebooks/           # Jupyter analysis notebooks
 ├── internal/                # Cloudflare worker, Supabase schema

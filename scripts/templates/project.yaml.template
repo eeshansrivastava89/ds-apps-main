@@ -10,10 +10,3 @@ description: {{DESCRIPTION}}
 shortDescription: {{DESCRIPTION}}
 tags:
   - name: Astro / React / Tailwind
-notebooks:
-  - id: getting-started
-    title: "Getting Started Analysis"
-    description: "Sample notebook demonstrating how to analyze this project's data"
-    path: analytics/notebooks/{{PACKAGE_NAME}}/getting_started.ipynb
-    schedule: manual
-    outputPath: {{PACKAGE_NAME}}

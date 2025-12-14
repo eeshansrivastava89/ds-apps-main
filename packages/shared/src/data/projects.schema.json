@@ -1,59 +1,49 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Projects",
-  "description": "Schema for projects.yaml - list of portfolio projects",
+  "title": "Project",
+  "description": "Schema for individual project yaml files in projects/{id}.yaml",
   "type": "object",
-  "required": ["projects"],
+  "required": ["id", "name", "url", "status", "description", "shortDescription", "tags"],
   "properties": {
-    "projects": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the project (used for filtering)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the project"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL path to the project (e.g., /ab-simulator/)"
+    },
+    "hubUrl": {
+      "type": "string",
+      "description": "URL path to the project hub page (e.g., /projects/ab-simulator)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["live", "in-progress", "coming-soon"],
+      "description": "Current status of the project"
+    },
+    "description": {
+      "type": "string",
+      "description": "Full description for build log page"
+    },
+    "shortDescription": {
+      "type": "string",
+      "description": "Short description for home page"
+    },
+    "tags": {
       "type": "array",
+      "description": "Technology tags",
       "items": {
         "type": "object",
-        "required": ["id", "name", "url", "status", "description", "shortDescription", "tags"],
+        "required": ["name"],
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the project (used for filtering)"
-          },
           "name": {
             "type": "string",
-            "description": "Display name of the project"
-          },
-          "url": {
-            "type": "string",
-            "description": "URL path to the project (e.g., /ab-simulator/)"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["live", "in-progress", "coming-soon"],
-            "description": "Current status of the project"
-          },
-          "description": {
-            "type": "string",
-            "description": "Full description for build log page"
-          },
-          "shortDescription": {
-            "type": "string",
-            "description": "Short description for home page"
-          },
-          "tags": {
-            "type": "array",
-            "description": "Technology tags with colors",
-            "items": {
-              "type": "object",
-              "required": ["name", "color"],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Tag name (e.g., Astro, React)"
-                },
-                "color": {
-                  "type": "string",
-                  "enum": ["orange", "sky", "cyan", "violet", "emerald", "rose", "amber", "indigo"],
-                  "description": "Tailwind color for the tag badge"
-                }
-              }
-            }
+            "description": "Tag name (e.g., Astro, React)"
           }
         }
       }

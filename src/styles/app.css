@@ -9,7 +9,7 @@
 
 @layer base {
 	:root {
-		--background: 40 33% 98%;  /* Warm cream instead of cool white */
+		--background: 0 0% 100%;  /* Pure white */
 		--foreground: 240 10% 1%;
 		--card: 0 0% 100%;
 		--card-foreground: 240 10% 3.9%;

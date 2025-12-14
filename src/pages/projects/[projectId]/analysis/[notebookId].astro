@@ -2,7 +2,8 @@
 /**
  * Dynamic Analysis Page for Project Notebooks
  * 
- * Embeds rendered HTML from notebooks configured in projects.yaml
+ * Scans analytics/notebooks/{projectId}/*.ipynb for notebooks
+ * Embeds rendered HTML from public/analysis/{projectId}/{notebookId}.html
  * 
  * URL pattern: /projects/{projectId}/analysis/{notebookId}
  * Example: /projects/ab-simulator/analysis/ab-test-analysis
@@ -12,37 +13,71 @@ import Section from '../../../../components/Section.astro'
 import Breadcrumbs from '../../../../../packages/shared/src/components/Breadcrumbs.astro'
 import { Icon } from 'astro-icon/components'
 
-import { getAllProjects } from '../../../../../packages/shared/src/data/projectLoader'
+import { getAllProjects, getProjectById } from '../../../../../packages/shared/src/data/projectLoader'
 import fs from 'node:fs'
 import path from 'node:path'
 
-// Generate static paths for all notebooks
+// Generate static paths from folder structure
 export async function getStaticPaths() {
-  const allProjects = getAllProjects()
+  // Inline discovery - scan analytics/notebooks/{projectId}/*.ipynb
+  const notebooksDir = path.join(process.cwd(), 'analytics', 'notebooks')
+  const notebooks: Array<{ projectId: string; notebookId: string; path: string }> = []
   
-  const paths = []
-  for (const project of allProjects) {
-    if (project.notebooks && Array.isArray(project.notebooks)) {
-      for (const notebook of project.notebooks) {
-        paths.push({
-          params: { 
-            projectId: project.id, 
-            notebookId: notebook.id 
-          },
-          props: { 
-            project, 
-            notebook 
-          }
+  if (fs.existsSync(notebooksDir)) {
+    const projectDirs = fs.readdirSync(notebooksDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+    
+    for (const projectId of projectDirs) {
+      const projectPath = path.join(notebooksDir, projectId)
+      const ipynbFiles = fs.readdirSync(projectPath)
+        .filter(f => f.endsWith('.ipynb'))
+      
+      for (const file of ipynbFiles) {
+        // Convert filename to ID: ab_test_analysis.ipynb -> ab-test-analysis
+        const notebookId = file.replace('.ipynb', '').replace(/_/g, '-')
+        notebooks.push({
+          projectId,
+          notebookId,
+          path: `analytics/notebooks/${projectId}/${file}`
         })
       }
     }
   }
   
-  return paths
+  const allProjects = getAllProjects()
+  
+  return notebooks.map(nb => {
+    const project = allProjects.find(p => p.id === nb.projectId)
+    return {
+      params: { 
+        projectId: nb.projectId, 
+        notebookId: nb.notebookId 
+      },
+      props: { 
+        project,
+        notebookId: nb.notebookId,
+        notebookPath: nb.path
+      }
+    }
+  }).filter(p => p.props.project) // Only include if project exists
 }
 
 const { projectId, notebookId } = Astro.params
-const { project, notebook } = Astro.props
+const { project, notebookPath } = Astro.props
+
+// Derive title from notebook ID: ab-test-analysis -> A/B Test Analysis
+function formatTitle(id: string): string {
+  return id
+    .split('-')
+    .map(word => {
+      if (word === 'ab') return 'A/B'
+      return word.charAt(0).toUpperCase() + word.slice(1)
+    })
+    .join(' ')
+}
+
+const notebookTitle = formatTitle(notebookId)
 
 // Try to load the rendered HTML
 let notebookHtml = ''
@@ -50,7 +85,7 @@ let lastUpdated = ''
 let notebookExists = false
 
 try {
-  const htmlPath = path.join(process.cwd(), 'public', 'analysis', notebook.outputPath, `${notebook.id}.html`)
+  const htmlPath = path.join(process.cwd(), 'public', 'analysis', projectId, `${notebookId}.html`)
   if (fs.existsSync(htmlPath)) {
     notebookHtml = fs.readFileSync(htmlPath, 'utf-8')
     const stats = fs.statSync(htmlPath)
@@ -58,16 +93,16 @@ try {
     notebookExists = true
   }
 } catch (e) {
-  console.warn(`Notebook HTML not found: ${notebook.outputPath}/${notebook.id}.html`)
+  console.warn(`Notebook HTML not found: ${projectId}/${notebookId}.html`)
 }
 
 // Build GitHub link to source notebook
-const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/blob/main/${notebook.path}`
+const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/blob/main/${notebookPath}`
 ---
 
 <PageLayout meta={{ 
-  title: `${notebook.title} | ${project.name}`, 
-  description: notebook.description 
+  title: `${notebookTitle} | ${project.name}`, 
+  description: `Analysis notebook for ${project.name}` 
 }}>
   <div class='flex w-full flex-col gap-y-8'>
     
@@ -82,8 +117,8 @@ const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/bl
     <header class='space-y-4'>
       <div class='flex items-start justify-between gap-4'>
         <div class='space-y-2'>
-          <h1 class='text-2xl font-bold text-foreground sm:text-3xl'>{notebook.title}</h1>
-          <p class='max-w-2xl text-muted-foreground'>{notebook.description}</p>
+          <h1 class='text-2xl font-bold text-foreground sm:text-3xl'>{notebookTitle}</h1>
+          <p class='max-w-2xl text-muted-foreground'>Analysis notebook for {project.name}</p>
         </div>
         
         <a
@@ -105,7 +140,7 @@ const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/bl
           </span>
           <span class='flex items-center gap-1.5'>
             <Icon name='mdi:refresh' class='h-4 w-4' />
-            Refreshes: {notebook.schedule}
+            Refreshes weekly
           </span>
         </div>
       )}
@@ -121,7 +156,7 @@ const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/bl
         <Icon name='mdi:notebook-outline' class='mx-auto h-12 w-12 text-muted-foreground/50' />
         <h2 class='mt-4 text-lg font-medium text-foreground'>Analysis Coming Soon</h2>
         <p class='mt-2 text-muted-foreground'>
-          This notebook will be generated on the next scheduled run ({notebook.schedule}).
+          This notebook will be generated on the next scheduled run (weekly).
         </p>
         <a
           href={githubNotebookUrl}

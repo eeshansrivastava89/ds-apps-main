@@ -8,15 +8,6 @@ export interface ProjectTag {
   color?: string // deprecated, kept for YAML compat
 }
 
-export interface ProjectNotebook {
-  id: string
-  title: string
-  description: string
-  path: string
-  schedule: 'weekly' | 'daily' | 'manual'
-  outputPath: string
-}
-
 export interface Project {
   id: string
   name: string
@@ -26,7 +17,6 @@ export interface Project {
   description: string
   shortDescription: string
   tags: ProjectTag[]
-  notebooks?: ProjectNotebook[] // Jupyter notebooks associated with this project
 }
 
 // Status badge configuration

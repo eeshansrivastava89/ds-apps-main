@@ -5,11 +5,12 @@
  * Convention:
  * - Hub page: /projects/{project-id}
  * - App: /{project-id}/
+ * - Notebooks: analytics/notebooks/{project-id}/*.ipynb
  * 
  * Sections (in order):
  * 1. Hero with status badge, description, tags, single CTA
  * 2. Engagement stats (from v_project_engagement_stats)
- * 3. Notebooks (if any)
+ * 3. Notebooks (discovered from folder structure)
  * 4. Related posts
  */
 import PageLayout from './BaseLayout.astro'
@@ -17,6 +18,8 @@ import Section from '../components/Section.astro'
 import Breadcrumbs from '../../packages/shared/src/components/Breadcrumbs.astro'
 import { STATUS_CONFIG, type Project } from '../../packages/shared/src/lib/projects'
 import { getPostsByProject } from '../lib/posts'
+import fs from 'node:fs'
+import path from 'node:path'
 
 interface Props {
   project: Project
@@ -27,6 +30,26 @@ const { project, ctaText = 'Try It →' } = Astro.props
 
 // Get related posts
 const relatedPosts = await getPostsByProject(project.id)
+
+// Discover notebooks from folder structure
+function discoverNotebooks(projectId: string) {
+  const notebookDir = path.join(process.cwd(), 'analytics', 'notebooks', projectId)
+  if (!fs.existsSync(notebookDir)) return []
+  
+  return fs.readdirSync(notebookDir)
+    .filter(f => f.endsWith('.ipynb'))
+    .map(file => {
+      const id = file.replace('.ipynb', '').replace(/_/g, '-')
+      // Format title: ab-test-analysis -> A/B Test Analysis
+      const title = id.split('-').map(word => {
+        if (word === 'ab') return 'A/B'
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      }).join(' ')
+      return { id, title }
+    })
+}
+
+const notebooks = discoverNotebooks(project.id)
 
 // Supabase config for client-side stats
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
@@ -90,17 +113,16 @@ const statusConfig = STATUS_CONFIG[project.status]
     </section>
 
     <!-- Notebooks -->
-    {project.notebooks && project.notebooks.length > 0 && (
+    {notebooks.length > 0 && (
       <Section title='Notebooks'>
         <div class='space-y-3'>
-          {project.notebooks.map((notebook) => (
+          {notebooks.map((notebook) => (
             <a 
               href={`/projects/${project.id}/analysis/${notebook.id}`}
               class='flex items-center justify-between border border-border bg-background p-4 transition hover:border-foreground/30 hover:shadow-sm'
             >
               <div class='space-y-1'>
                 <h3 class='font-medium text-foreground'>{notebook.title}</h3>
-                <p class='text-sm text-muted-foreground'>{notebook.description}</p>
               </div>
               <span class='shrink-0 text-sm text-muted-foreground'>View →</span>
             </a>
