@@ -1,4 +1,4 @@
-# eeshans.com — Collection of interactive data scienc web apps + portfolio
+# eeshans.com — Collection of interactive data science web apps + portfolio
 
 > "The best way to understand data is to build the system that creates it."
 
