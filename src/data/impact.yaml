@@ -33,8 +33,8 @@ impact:
     icon: "lucide:github"
     visible: true
     items:
-      - text: "ds-apps-main"
-        link: "https://github.com/eeshansrivastava89/ds-apps-main"
+      - text: "datascienceapps"
+        link: "https://github.com/eeshansrivastava89/datascienceapps"
       - text: "weather app"
         link: "https://github.com/eeshansrivastava89/weather-app"
 

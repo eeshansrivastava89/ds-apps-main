@@ -68,4 +68,4 @@ packages/ab-simulator/
 
 - **Game:** [/ab-simulator](https://eeshans.com/ab-simulator)
 - **Project hub:** [/projects/ab-simulator](https://eeshans.com/projects/ab-simulator)
-- **Source code:** [github.com/eeshansrivastava89/ds-apps-main](https://github.com/eeshansrivastava89/ds-apps-main/tree/main/packages/ab-simulator)
+- **Source code:** [github.com/eeshansrivastava89/datascienceapps](https://github.com/eeshansrivastava89/datascienceapps/tree/main/packages/ab-simulator)

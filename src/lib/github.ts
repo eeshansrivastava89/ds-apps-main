@@ -9,7 +9,7 @@ export interface Contributor {
 }
 
 const REPO_OWNER = 'eeshansrivastava89'
-const REPO_NAME = 'ds-apps-main'
+const REPO_NAME = 'datascienceapps'
 
 /**
  * Fetch recent contributors from GitHub Issues and PRs
@@ -22,7 +22,7 @@ export async function getRecentContributors(days = 30): Promise<Contributor[]> {
 
   const headers: HeadersInit = {
     Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'ds-apps-main',
+    'User-Agent': 'datascienceapps',
   }
 
   // Use token if available (avoids rate limits)

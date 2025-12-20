@@ -24,7 +24,7 @@ Interactive memory game with real A/B testing, live stats, and full analysis pip
 
 **Stack:** Astro + React + PostHog + Supabase + Plotly
 
-[→ Try it live](https://eeshans.com/ab-simulator) | [→ Read the analysis](https://eeshans.com/projects/ab-simulator) | [→ View source](https://github.com/eeshansrivastava89/ds-apps-main/tree/main/packages/ab-simulator)
+[→ Try it live](https://eeshans.com/ab-simulator) | [→ Read the analysis](https://eeshans.com/projects/ab-simulator) | [→ View source](https://github.com/eeshansrivastava89/datascienceapps/tree/main/packages/ab-simulator)
 
 ---
 
@@ -86,7 +86,7 @@ All analytics keys and environment variables managed via GitHub Secrets and Fly.
 ## Architecture
 
 ```
-ds-apps-main/
+datascienceapps/
 ├── src/                    # Main portfolio site
 │   ├── pages/             # Home, About, Projects, Writing, Contribute
 │   ├── content/post/      # MDX blog posts
@@ -111,8 +111,8 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical details.
 Want to build with me? See the full guide at **[eeshans.com/contribute](https://eeshans.com/contribute)**
 
 Quick paths:
-- **Fix or enhance** — Browse [open issues](https://github.com/eeshansrivastava89/ds-apps-main/issues), claim one, submit PR
-- **Build new app** — Propose via [GitHub Discussion](https://github.com/eeshansrivastava89/ds-apps-main/discussions/new?category=new-data-science-web-app-proposals), use `create-package` script
+- **Fix or enhance** — Browse [open issues](https://github.com/eeshansrivastava89/datascienceapps/issues), claim one, submit PR
+- **Build new app** — Propose via [GitHub Discussion](https://github.com/eeshansrivastava89/datascienceapps/discussions/new?category=new-data-science-web-app-proposals), use `create-package` script
 
 Setup: Clone repo, copy `.env.example` to `.env`, run `pnpm install && pnpm dev`
 

@@ -17,4 +17,4 @@ I'm working on essays about what I'm learning as I build this site and these pro
 
 Everything I write comes from doing, not theorizing. Real projects, real data, real lessons.
 
-Follow along on [Substack](https://fullstackdatascientist.substack.com) or check the [GitHub](https://github.com/eeshansrivastava89/ds-apps-main) to see what I'm shipping.
+Follow along on [Substack](https://fullstackdatascientist.substack.com) or check the [GitHub](https://github.com/eeshansrivastava89/datascienceapps) to see what I'm shipping.
