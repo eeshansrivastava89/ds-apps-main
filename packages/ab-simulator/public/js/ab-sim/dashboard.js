@@ -220,8 +220,27 @@
 		)
 	}
 
-	// Store Leaflet map instance for reuse
+	// Store Leaflet map instance
 	let leafletMap = null
+
+	// Bind follow toggle to HTML checkbox
+	function isFollowEnabled() {
+		const checkbox = document.getElementById('follow-checkbox')
+		return checkbox ? checkbox.checked : false
+	}
+
+	// Initialize follow toggle - zoom out to global when disabled
+	function initFollowToggle() {
+		const checkbox = document.getElementById('follow-checkbox')
+		if (!checkbox) return
+
+		checkbox.addEventListener('change', () => {
+			if (!checkbox.checked && leafletMap) {
+				// Zoom out to global view when follow is disabled
+				leafletMap.flyTo([25, 0], 2)
+			}
+		})
+	}
 
 	function renderGeoMap(geoData) {
 		const mapEl = document.getElementById('geo-map')
@@ -247,13 +266,16 @@
 				onAdd: function() {
 					const btn = L.DomUtil.create('button', 'leaflet-bar leaflet-control')
 					btn.innerHTML = '🏠'
-					btn.title = 'Reset view'
+					btn.title = 'Reset to global view'
 					btn.style.cssText = 'width:30px;height:30px;font-size:16px;cursor:pointer;background:#fff;border:none;'
 					btn.onclick = (e) => { e.stopPropagation(); leafletMap.setView([25, 0], 2) }
 					return btn
 				}
 			})
 			new L.Control.ResetView({ position: 'topleft' }).addTo(leafletMap)
+
+			// Initialize the HTML follow toggle
+			initFollowToggle()
 		} else {
 			// Clear existing markers
 			leafletMap.eachLayer(layer => {
@@ -267,7 +289,7 @@
 			const borderColor = d.variant === 'A' ? '#b8860b' : '#2d4a9e'
 
 			L.circleMarker([d.lat, d.lon], {
-				radius: 12,
+				radius: 8,
 				fillColor: color,
 				color: borderColor,
 				weight: 2,
@@ -278,12 +300,14 @@
 			.addTo(leafletMap)
 		})
 
-		// Fly to most recent completion location
-		const mostRecent = geoData.reduce((a, b) =>
-			new Date(a.last_completion_at) > new Date(b.last_completion_at) ? a : b
-		)
-		if (mostRecent && mostRecent.lat && mostRecent.lon) {
-			leafletMap.flyTo([mostRecent.lat, mostRecent.lon], 8)
+		// Fly to most recent completion location (only if follow mode is enabled)
+		if (isFollowEnabled()) {
+			const mostRecent = geoData.reduce((a, b) =>
+				new Date(a.last_completion_at) > new Date(b.last_completion_at) ? a : b
+			)
+			if (mostRecent && mostRecent.lat && mostRecent.lon) {
+				leafletMap.flyTo([mostRecent.lat, mostRecent.lon], 8)
+			}
 		}
 	}
 
