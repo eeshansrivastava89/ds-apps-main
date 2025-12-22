@@ -368,6 +368,11 @@ function setupPuzzle() {
 function startChallenge() {
 	if (!isPhase(RUN_PHASES.IDLE, RUN_PHASES.RESULT)) return
 	setPhase(RUN_PHASES.MEMORIZE)
+	// Randomize subvariant on each game start
+	puzzleState.puzzleConfig = window.PuzzleConfig.getPuzzleForVariant(puzzleState.variant)
+	$('user-variant').textContent = `Variant ${puzzleState.variant} | ${puzzleState.puzzleConfig.id}`
+	buildGrid(puzzleState.puzzleConfig)
+	forEachMemoryTile((tile) => tile.addEventListener('click', handleTileClick))
 	puzzleState.foundPineapples = []
 	puzzleState.totalClicks = 0
 	puzzleState.gridState = Array(5)
