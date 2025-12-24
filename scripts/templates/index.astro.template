@@ -1,6 +1,6 @@
 ---
-import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
-import GitHubContributeButton from '../../../shared/src/components/GitHubContributeButton.astro'
+import AppLayout from '@shared/layouts/AppLayout.astro'
+import GitHubContributeButton from '@shared/components/GitHubContributeButton.astro'
 ---
 
 <AppLayout projectId="{{PACKAGE_NAME}}">

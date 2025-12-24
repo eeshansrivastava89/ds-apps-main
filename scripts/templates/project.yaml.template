@@ -4,7 +4,6 @@
 id: {{PACKAGE_NAME}}
 name: {{DISPLAY_NAME}}
 url: /{{PACKAGE_NAME}}/
-hubUrl: /projects/{{PACKAGE_NAME}}
 status: in-progress
 description: {{DESCRIPTION}}
 shortDescription: {{DESCRIPTION}}

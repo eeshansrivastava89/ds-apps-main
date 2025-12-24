@@ -1,6 +1,6 @@
 # Architecture V2: Site Simplification
 
-> **Status:** Phase 1-5 Complete ✅ | Phase 13 Complete ✅ | Phase 14 Complete ✅ | Phase 15 Planned | Phase 16 Planned
+> **Status:** Phase 1-5 Complete ✅ | Phase 13 Complete ✅ | Phase 14 Complete ✅ | Phase 15 Complete ✅ | Phase 16 Planned
 > **Date:** December 2024
 > **Goal:** Simplify UX by focusing the main site on **projects + unified analysis page**, moving writing to Substack.
 
@@ -92,13 +92,13 @@ Each app page follows this three-section layout:
 
 Substack RSS provides: `title`, `link`, `pubDate`, `description`. **No project tags.**
 
-**Solution:** Manual YAML mapping in `src/data/substack-posts.yaml` for project association.
+**Solution:** Manual YAML mapping in `packages/shared/src/data/substack-posts.yaml` for project association.
 
 ```
-┌─────────────────┐     ┌──────────────────────┐
-│ Substack RSS    │────▶│ src/lib/substack.ts  │
-│ (title, url,    │     │ (fetch + parse)      │
-│  date, excerpt) │     └──────────┬───────────┘
+┌─────────────────┐     ┌────────────────────────────────────┐
+│ Substack RSS    │────▶│ packages/shared/src/lib/substack.ts│
+│ (title, url,    │     │ (fetch + parse)                    │
+│  date, excerpt) │     └──────────┬─────────────────────────┘
 └─────────────────┘                │
                                    ▼
 ┌─────────────────┐     ┌──────────────────────┐
@@ -162,10 +162,11 @@ Substack RSS provides: `title`, `link`, `pubDate`, `description`. **No project t
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| `substack.ts` ✅ | `src/lib/` | RSS parser + YAML join utility |
-| `SubstackPostPreview.astro` ✅ | `src/components/writing/` | Substack post preview with external link |
+| `substack.ts` ✅ | `packages/shared/src/lib/` | RSS parser + YAML join utility |
+| `SubstackPostPreview.astro` ✅ | `packages/shared/src/components/` | Substack post preview with external link |
 | `AnalysisTable.tsx` | `src/components/` | React table with shadcn + TanStack |
 | `GitHubContributeButton.astro` | `packages/shared/src/components/` | Subtle button linking to CONTRIBUTING.md |
+| `SubscribeDialog.tsx` ✅ | `packages/shared/src/components/` | Substack subscribe modal (Phase 15) |
 
 ---
 
@@ -498,45 +499,72 @@ App Page
 
 ---
 
-# Phase 15: Architecture Cleanup (Shared Boundaries + Scaffolding)
+# Phase 15: Architecture Cleanup — [#114](https://github.com/eeshansrivastava89/datascienceapps/issues/114)
 
-> **Status:** Planned
-> **Goal:** Eliminate architectural drift by hardening shared boundaries, removing hub legacy, and simplifying the scaffolded app contract.
-
----
-
-## Why This Change?
-
-The codebase now has two main surfaces (base site + app packages) but still relies on brittle deep-relative imports and stale hub concepts. This creates unnecessary maintenance risk as new apps are added.
-
-**Primary risks today:**
-1. Deep `../../..` imports across packages
-2. Shared package exports out of sync with actual files
-3. Hub-page legacy encoded in scaffolding
-4. Duplicate layout shells causing drift
+> **Status:** Complete ✅
+> **Goal:** Fix brittle imports, broken features, and dead code.
 
 ---
 
-## Architecture Impact
+## Summary
 
-- **Shared package becomes the only API surface** for app/base imports.
-- **No reverse dependency** from shared → base.
-- **Scaffolded apps link to Analysis instead of hub pages** by default.
-- **Layouts converge** to a single source of truth.
-- **Versions align** across root/app/scaffold to reduce drift.
+Eliminated architectural debt accumulated during rapid development:
+- **Path aliases** — All deep `../../../packages/shared/src/...` imports replaced with `@shared/*`
+- **Reverse dependency fixed** — Moved `SubscribeDialog` to shared package (was importing base → shared → base)
+- **Dead features removed** — Likes/comments (broken), giscus dependency, Supabase artifacts
+- **Dead code removed** — `hubUrl` from schema, types, YAML, templates
+- **Version alignment** — All packages now on Astro 5.16.0
+- **API surface defined** — Shared package exports reflect actual usage
 
 ---
 
-## Action Items
+## Implementation Details
 
-- [ ] Define and export the shared API surface (layouts/components/data loaders).
-- [ ] Add path aliases and migrate away from deep relative imports.
-- [ ] Remove `hubUrl` from project schema, data, and templates.
-- [ ] Choose a single owner for `RelatedContent` (AppLayout vs app pages).
-- [ ] Consolidate base + app layout shells into one source of truth.
-- [ ] Align Astro/React/Tailwind versions across root/app/scaffold.
-- [ ] Clarify likes persistence path (RPC vs event-only).
-- [ ] Harden notebook loading assumptions for app builds.
+### 1. Path Aliases ✅
+- Added `@shared/*` alias to root `tsconfig.json` → `packages/shared/src/*`
+- Added `@shared/*` alias to `packages/ab-simulator/tsconfig.json` → `../shared/src/*`
+- Updated 11 files across `src/pages/`, `src/lib/`, `src/components/`, `packages/ab-simulator/`
+- Updated `scripts/templates/index.astro.template` for new packages
+
+### 2. Reverse Dependency Fix ✅
+- Moved `SubscribeDialog.tsx` from `src/components/` to `packages/shared/src/components/`
+- Created `packages/shared/src/components/ui/dialog.tsx` (shadcn component)
+- Created `packages/shared/src/lib/utils.ts` (cn helper)
+- Updated `packages/shared/src/components/layout/Header.astro` to use local import
+
+### 3. Likes & Comments Removal ✅
+- Deleted `src/components/LikeButton.astro`
+- Deleted `src/components/Comments.astro`
+- Removed `@giscus/react` and `giscus` from `package.json`
+- Created Supabase migration `20251224000000_drop_likes_feature.sql`:
+  - Dropped `toggle_like()` and `get_likes()` RPCs
+  - Dropped `v_like_counts` view
+  - Dropped `likes` table and RLS policies
+
+### 4. hubUrl Removal ✅
+- Removed from `packages/shared/src/data/projects.schema.json`
+- Removed from `packages/shared/src/lib/projects.ts` (Project interface)
+- Removed from `packages/shared/src/data/projects/ab-simulator.yaml`
+- Removed from `scripts/templates/project.yaml.template`
+
+### 5. Version Alignment ✅
+- Upgraded root `astro` from `^4.4.15` to `^5.16.0`
+- Upgraded `@astrojs/mdx` from `^2.1.1` to `^4.0.0`
+- Upgraded `astro-expressive-code` from `^0.33.5` to `^0.38.0`
+
+### 6. Shared Exports Cleanup ✅
+- Removed stale `./learnings` export (file didn't exist)
+- Added exports for: `lib/projects`, `lib/substack`, `lib/content-loader`, `lib/utils`, `data/projectLoader`, `layouts/AppLayout.astro`, `components/Breadcrumbs.astro`, `components/ProjectCard.astro`, `components/Timeline.astro`, `components/GitHubContributeButton.astro`, `components/SubstackPostPreview.astro`, `components/SubscribeDialog`
+
+---
+
+## Success Metrics
+
+- [x] No deep relative imports (`../../../packages/shared/src/...`)
+- [x] No reverse dependencies (shared → base)
+- [x] All packages on same Astro version (5.16.0)
+- [x] Shared package exports match actual files
+- [x] Build passes (7 pages in ~2.5s)
 
 ---
 

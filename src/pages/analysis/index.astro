@@ -3,11 +3,11 @@ import PageLayout from '@/layouts/BaseLayout.astro'
 import { getAllAnalysisContent } from '@/lib/analysis'
 import { AnalysisTable } from '@/components/AnalysisTable'
 import { siteConfig } from '@/site-config'
-import Breadcrumbs from '../../../packages/shared/src/components/Breadcrumbs.astro'
-import { getAllProjects } from '../../../packages/shared/src/data/projectLoader'
+import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
+import { getAllProjects } from '@shared/data/projectLoader'
 
 // Import YAML mapping as raw text
-import substackMappingsRaw from '../../../packages/shared/src/data/substack-posts.yaml?raw'
+import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
 
 // Load all analysis content (notebooks + Substack posts)
 const allContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)

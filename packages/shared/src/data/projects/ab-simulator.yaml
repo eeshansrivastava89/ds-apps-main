@@ -4,7 +4,6 @@
 id: ab-simulator
 name: A/B Testing Memory Game
 url: /ab-simulator/
-hubUrl: /projects/ab-simulator
 status: live
 description: A live A/B test studying how game difficulty affects player behavior. Play the memory game, contribute data, and explore the published analysis.
 shortDescription: A live A/B test on game difficulty and player behavior

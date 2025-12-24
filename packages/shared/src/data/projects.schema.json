@@ -17,10 +17,6 @@
       "type": "string",
       "description": "URL path to the project (e.g., /ab-simulator/)"
     },
-    "hubUrl": {
-      "type": "string",
-      "description": "URL path to the project hub page (e.g., /projects/ab-simulator)"
-    },
     "status": {
       "type": "string",
       "enum": ["live", "in-progress", "coming-soon"],

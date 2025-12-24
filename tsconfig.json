@@ -10,6 +10,9 @@
       "dom.iterable"
     ],
     "paths": {
+      "@shared/*": [
+        "packages/shared/src/*"
+      ],
       "@/assets/*": [
         "src/assets/*"
       ],

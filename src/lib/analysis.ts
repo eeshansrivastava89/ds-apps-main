@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import { getSubstackPosts, type SubstackPost } from '../../packages/shared/src/lib/substack'
+import { getSubstackPosts, type SubstackPost } from '@shared/lib/substack'
 
 /**
  * Unified content type for /analysis page

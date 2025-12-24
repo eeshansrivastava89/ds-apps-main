@@ -20,15 +20,15 @@ const socialData = yaml.load(socialLinksYaml) as {
 const socialLinks = socialData.socialLinks
 
 // Load projects
-import { getLiveProjects, getProjectsByStatus } from '../../packages/shared/src/lib/projects'
-import { getAllProjects } from '../../packages/shared/src/data/projectLoader'
-import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
-import Timeline from '../../packages/shared/src/components/Timeline.astro'
+import { getLiveProjects, getProjectsByStatus } from '@shared/lib/projects'
+import { getAllProjects } from '@shared/data/projectLoader'
+import ProjectCard from '@shared/components/ProjectCard.astro'
+import Timeline from '@shared/components/Timeline.astro'
 
 // Load Substack posts
-import { getSubstackPosts } from '../../packages/shared/src/lib/substack'
-import SubstackPostPreview from '../../packages/shared/src/components/SubstackPostPreview.astro'
-import substackMappingsRaw from '../../packages/shared/src/data/substack-posts.yaml?raw'
+import { getSubstackPosts } from '@shared/lib/substack'
+import SubstackPostPreview from '@shared/components/SubstackPostPreview.astro'
+import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
 
 const SUBSTACK_RSS_URL = 'https://0to1datascience.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
