@@ -21,7 +21,9 @@ export const siteConfig: SiteConfig = {
 			month: 'short',
 			year: 'numeric'
 		}
-	}
+	},
+	// Substack RSS feed URL
+	substackRssUrl: 'https://0to1datascience.substack.com/feed'
 }
 
 export const menuLinks: Array<{ title: string; path: string }> = [

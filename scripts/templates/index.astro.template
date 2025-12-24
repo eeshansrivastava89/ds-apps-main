@@ -1,11 +1,42 @@
 ---
 import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
+import GitHubContributeButton from '../../../shared/src/components/GitHubContributeButton.astro'
 ---
 
 <AppLayout projectId="{{PACKAGE_NAME}}">
+	<!-- Contribute Section -->
+	<div class='mb-6 flex justify-center'>
+		<GitHubContributeButton />
+	</div>
+
+	<!--
+		🎮 Try it: App Content
+
+		Build your interactive app here!
+		- Add your game, dashboard, charts, or interactive features
+		- See /ab-simulator for a complete example
+		- This slot is automatically wrapped with a "Try it" heading by AppLayout
+
+		Once you add content below, the placeholder will disappear.
+	-->
 	<div class='rounded-lg border bg-card p-6'>
 		<p class='text-sm text-muted-foreground'>
-			Start building your app here. This page uses the shared AppLayout with header/footer, breadcrumbs, and project info from projects.yaml.
+			Start building your app here. Add your game logic, dashboard, charts, or any interactive content.
+		</p>
+		<p class='mt-2 text-sm text-muted-foreground'>
+			This page automatically includes:
+		</p>
+		<ul class='mt-2 list-inside list-disc space-y-1 text-sm text-muted-foreground'>
+			<li>📊 <strong>Understand it</strong> — Notebook summaries from analytics/notebooks/{{PACKAGE_NAME}}/</li>
+			<li>📮 <strong>Read about it</strong> — Substack posts tagged with this project</li>
+		</ul>
+		<p class='mt-4 text-xs text-muted-foreground'>
+			💡 Delete this placeholder div once you add your app content.
 		</p>
 	</div>
+
+	<!--
+		📊 Understand it + 📮 Read about it sections are automatically added by AppLayout
+		No need to manually add them here!
+	-->
 </AppLayout>

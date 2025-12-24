@@ -1,0 +1,49 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { getAllAnalysisContent } from '@/lib/analysis'
+import { AnalysisTable } from '@/components/AnalysisTable'
+import { siteConfig } from '@/site-config'
+import Breadcrumbs from '../../../packages/shared/src/components/Breadcrumbs.astro'
+import { getAllProjects } from '../../../packages/shared/src/data/projectLoader'
+
+// Import YAML mapping as raw text
+import substackMappingsRaw from '../../../packages/shared/src/data/substack-posts.yaml?raw'
+
+// Load all analysis content (notebooks + Substack posts)
+const allContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)
+
+// Load project metadata to get actual names
+const allProjects = await getAllProjects()
+const projectNames = Object.fromEntries(
+	allProjects.map(p => [p.id, p.name])
+)
+
+const initialProjectId = Astro.url.searchParams.get('project')?.trim() || undefined
+
+// Serialize dates for React (convert Date objects to ISO strings for hydration)
+const serializedContent = allContent.map(item => ({
+	...item,
+	date: item.date.toISOString()
+}))
+
+const meta = {
+	description: 'Unified view of all notebooks and posts across projects. Filter by type, project, or statistical method.',
+	title: 'Analysis & Writing'
+}
+---
+
+<PageLayout meta={meta}>
+	<div class='w-full'>
+		<Breadcrumbs />
+
+		<div class="mb-8 mt-5">
+			<h1 class='text-2xl font-bold mb-2'>Analysis & Writing</h1>
+			<p class='text-base text-muted-foreground'>
+				Explore notebooks and posts across all projects. Filter by type, project, or statistical method.
+			</p>
+		</div>
+
+		<!-- React island for interactive table -->
+		<AnalysisTable data={serializedContent} projectNames={projectNames} initialProjectId={initialProjectId} client:load />
+	</div>
+</PageLayout>

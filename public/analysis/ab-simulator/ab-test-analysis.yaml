@@ -1,7 +1,16 @@
 title: 'A/B Test: Pineapple Finder Difficulty'
+project_id: ab-simulator
 status: inconclusive
 decision: Do NOT ship Variant B — guardrail metrics show significant drops in completion
   and engagement.
+methods:
+  - Frequentist
+  - Chi-square
+  - Welch's t-test
+tags:
+  - ab-testing
+  - conversion
+  - power-analysis
 metrics:
 - label: Completion Time
   value: +2.5s

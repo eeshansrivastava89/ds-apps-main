@@ -18,7 +18,7 @@
 | Layer | Location | Purpose |
 |-------|----------|---------|
 | **Shared** | `packages/shared/` | Layouts, components, utilities (`@eeshans/shared`) |
-| **Portfolio Site** | `src/` | Main site: `/`, `/about`, `/writing`, `/projects`, `/contribute` |
+| **Portfolio Site** | `src/` | Main site: `/`, `/about`, `/writing`, `/projects`, `/analysis` |
 | **App Packages** | `packages/{app}/` | Standalone apps like `/ab-simulator/` |
 
 **Tech stack:** Astro 4.x, React 19, Tailwind CSS, TypeScript, pnpm workspaces
@@ -26,7 +26,9 @@
 **Key files:**
 - `packages/shared/src/data/projectLoader.ts` — Aggregates project YAMLs via `getAllProjects()`, `getProjectById()`
 - `packages/shared/src/lib/projects.ts` — Project types, status helpers
-- `src/layouts/ProjectHubLayout.astro` — Reusable hub page template
+- `packages/shared/src/components/GitHubContributeButton.astro` — Reusable GitHub CTA
+- `src/lib/analysis.ts` — Unified content loader (notebooks + Substack posts)
+- `src/components/AnalysisTable.tsx` — Interactive analysis table with filtering
 - `scripts/create-package.mjs` — Scaffolds new apps with templates from `scripts/templates/`
 
 ---
@@ -123,15 +125,19 @@ node scripts/create-package.mjs my-app "My App" "Short description"
 ```
 
 **Creates:**
-- `packages/my-app/` — Full Astro package
-- `src/pages/projects/my-app.astro` — Hub page using ProjectHubLayout
+- `packages/my-app/` — Full Astro package with app page template
 - `packages/shared/src/data/projects/my-app.yaml` — Project metadata
 - `analytics/notebooks/my-app/` — Sample notebook
 - `src/content/post/my-app-getting-started.md` — Sample post
 
+**App page includes (auto-generated):**
+- GitHubContributeButton — Links to CONTRIBUTING.md
+- Related Content section — Links to `/analysis?project=my-app`
+
 **Convention:**
-- Hub page: `/projects/{id}`
 - App: `/{id}/`
+- Analysis: `/analysis?project={id}`
+- No hub pages (direct navigation)
 
 
 ---

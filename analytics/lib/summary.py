@@ -34,7 +34,10 @@ class NotebookSummary:
     warnings: list[str] = field(default_factory=list)
     methodology: Optional[str] = None
 
-    # Metadata
+    # Metadata (for /analysis page filtering)
+    project_id: Optional[str] = None  # Links to project
+    methods: list[str] = field(default_factory=list)  # Statistical methods used
+    tags: list[str] = field(default_factory=list)  # Topic tags
     generated_at: Optional[str] = None
     notebook_path: Optional[str] = None
 
@@ -48,7 +51,9 @@ def write_notebook_summary(
     metrics: list[dict],
     power_analysis: Optional[str] = None,
     warnings: Optional[list[str]] = None,
-    methodology: Optional[str] = None
+    methodology: Optional[str] = None,
+    methods: Optional[list[str]] = None,
+    tags: Optional[list[str]] = None
 ) -> str:
     """
     Write standardized YAML summary for Astro consumption.
@@ -63,6 +68,8 @@ def write_notebook_summary(
         power_analysis: Optional power analysis summary
         warnings: Optional list of warning strings
         methodology: Optional methodology note
+        methods: Optional list of statistical methods (e.g., ["Bayesian", "Frequentist"])
+        tags: Optional list of topic tags (e.g., ["ab-testing", "conversion"])
 
     Returns:
         Path to written YAML file
@@ -80,6 +87,7 @@ def write_notebook_summary(
     # Build summary
     summary = {
         "title": title,
+        "project_id": project_id,
         "status": status,
         "decision": decision,
         "metrics": metrics,
@@ -92,6 +100,10 @@ def write_notebook_summary(
         summary["warnings"] = warnings
     if methodology:
         summary["methodology"] = methodology
+    if methods:
+        summary["methods"] = methods
+    if tags:
+        summary["tags"] = tags
 
     # Write YAML
     with open(output_path, "w") as f:

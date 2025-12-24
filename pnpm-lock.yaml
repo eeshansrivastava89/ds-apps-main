@@ -159,12 +159,21 @@ importers:
 
   packages/ab-simulator:
     dependencies:
+      '@iconify-json/lucide':
+        specifier: ^1.2.81
+        version: 1.2.81
       astro:
         specifier: ^5.16.0
         version: 5.16.0(@types/node@24.10.1)(jiti@1.21.7)(rollup@4.53.3)(typescript@5.9.3)(yaml@2.8.1)
+      astro-icon:
+        specifier: ^1.1.5
+        version: 1.1.5
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.1
       unique-names-generator:
         specifier: ^4.7.1
         version: 4.7.1

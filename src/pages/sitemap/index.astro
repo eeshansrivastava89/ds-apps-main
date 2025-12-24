@@ -34,12 +34,19 @@ const siteTree: TreeNode[] = [
     path: '/projects',
     icon: '🚀',
     description: 'Live projects and experiments',
+    children: []
+  },
+  {
+    name: 'Analysis',
+    path: '/analysis',
+    icon: '📚',
+    description: 'Unified notebooks and posts',
     children: [
       {
-        name: 'A/B Simulator',
-        path: '/projects/ab-simulator',
+        name: 'A/B Simulator Analysis',
+        path: '/analysis?project=ab-simulator',
         icon: '📊',
-        description: 'Project hub with stats and docs'
+        description: 'Filtered analysis for A/B Simulator'
       }
     ]
   },
@@ -62,10 +69,10 @@ const siteTree: TreeNode[] = [
     }))
   },
   {
-    name: 'Contribute',
-    path: '/contribute',
+    name: 'Contribute on GitHub',
+    path: 'https://github.com/eeshansrivastava89/datascienceapps/blob/main/docs/CONTRIBUTING.md',
     icon: '🤝',
-    description: 'How to follow and contribute'
+    description: 'Contribution guide and workflow'
   },
   {
     name: 'RSS Feed',

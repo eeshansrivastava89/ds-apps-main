@@ -1,5 +1,6 @@
 ---
 import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
+import GitHubContributeButton from '../../../shared/src/components/GitHubContributeButton.astro'
 ---
 
 <AppLayout projectId="ab-simulator" showDescription={false}>
@@ -33,7 +34,7 @@ import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
 					<div class='text-base font-bold text-slate-900 dark:text-white sm:text-lg'>See Real-Time Results</div>
 				</div>
 				<p class='text-xs text-slate-600 dark:text-slate-400 sm:text-sm'>
-					Every game contributes real data. Live dashboard below, published analysis in <a href='/projects/ab-simulator' class='whitespace-nowrap font-semibold text-sky-600 underline decoration-sky-300 underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:decoration-sky-600 dark:hover:text-sky-300'>Project&nbsp;Docs&nbsp;→</a>
+					Every game contributes real data. Live dashboard below, published analysis in <a href='/analysis?project=ab-simulator' class='whitespace-nowrap font-semibold text-sky-600 underline decoration-sky-300 underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:decoration-sky-600 dark:hover:text-sky-300'>Analysis&nbsp;→</a>
 				</p>
 			</div>
 		</div>
@@ -55,6 +56,11 @@ import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
 				</span>
 			</div>
 		</div>
+	</div>
+
+	<!-- Contribute Section -->
+	<div class='mb-6 flex justify-center'>
+		<GitHubContributeButton />
 	</div>
 
 		<!-- Puzzle Section -->
@@ -150,7 +156,7 @@ import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
 			<div class='flex items-center justify-between'>
 				<div>
 					<h3 class='mb-3 text-lg font-semibold'>📊 Live Dashboard</h3>
-					<p class='text-sm text-muted-foreground'>Real-time descriptive stats. But don't conclude experiment using this data. <br />Check the detailed statistical analysis in <a href='/projects/ab-simulator' class='whitespace-nowrap font-semibold text-sky-600 underline decoration-sky-300 underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:decoration-sky-600 dark:hover:text-sky-300'>Project&nbsp;Docs&nbsp;→</a></p>
+					<p class='text-sm text-muted-foreground'>Real-time descriptive stats. But don't conclude experiment using this data. <br />Check the detailed statistical analysis in <a href='/analysis?project=ab-simulator' class='whitespace-nowrap font-semibold text-sky-600 underline decoration-sky-300 underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:decoration-sky-600 dark:hover:text-sky-300'>Analysis&nbsp;→</a></p>
 				</div>
 				<div class='flex items-center gap-3'>
 					<button

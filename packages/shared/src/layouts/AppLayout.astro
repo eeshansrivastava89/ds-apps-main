@@ -4,7 +4,7 @@
  * 
  * Provides:
  * - SiteLayout wrapper (header/footer)
- * - Nav bar with breadcrumbs + connection status + Project Docs link
+ * - Nav bar with breadcrumbs + connection status + Analysis link
  * - App header with title and description from project yaml files
  * 
  * Usage:
@@ -15,6 +15,7 @@
 import SiteLayout from './SiteLayout.astro'
 import ConnectionStatus from '../components/ConnectionStatus.astro'
 import Breadcrumbs from '../components/Breadcrumbs.astro'
+import RelatedContent from '../components/RelatedContent.astro'
 import type { Project } from '../lib/projects'
 import { getProjectById } from '../data/projectLoader'
 
@@ -24,8 +25,8 @@ interface Props {
   showDescription?: boolean  // Show long description below title
 }
 
-const { 
-  projectId, 
+const {
+  projectId,
   showConnectionStatus = true,
   showDescription = true
 } = Astro.props
@@ -37,11 +38,12 @@ if (!project) {
   throw new Error(`Project "${projectId}" not found in projects/ directory`)
 }
 
+const analysisUrl = `/analysis?project=${encodeURIComponent(projectId)}`
+
 const breadcrumbItems = [
   { label: 'Home', href: '/' },
   { label: 'Projects', href: '/projects' },
-  { label: project.name, href: project.hubUrl || `/projects/${projectId}` },
-  { label: 'Play' }
+  { label: project.name }  // Current page, not clickable
 ]
 ---
 
@@ -53,14 +55,12 @@ const breadcrumbItems = [
         <Breadcrumbs items={breadcrumbItems} />
         {showConnectionStatus && <div class='hidden sm:flex'><ConnectionStatus /></div>}
       </div>
-      {project.hubUrl && (
-        <a
-          href={project.hubUrl}
-          class='inline-flex w-fit items-center gap-2 border border-sky-500 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:hover:bg-sky-500/20'
-        >
-          Project Docs
-        </a>
-      )}
+      <a
+        href={analysisUrl}
+        class='inline-flex w-fit items-center gap-2 border border-sky-500 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:hover:bg-sky-500/20'
+      >
+        Analysis
+      </a>
     </div>
 
     <!-- App Header -->
@@ -73,7 +73,32 @@ const breadcrumbItems = [
       )}
     </div>
 
-    <!-- App Content -->
-    <slot />
+    <!-- Try it: App Content -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🎮</span>
+        <h2 class="text-2xl font-bold">Try it</h2>
+      </div>
+      <slot>
+        <!-- Placeholder when slot is empty -->
+        <div class="rounded-lg border border-dashed border-border p-12 text-center">
+          <div class="text-muted-foreground space-y-3">
+            <p class="text-lg font-medium">Build your interactive app here</p>
+            <p class="text-sm">
+              This is where your game, dashboard, or interactive content goes.
+            </p>
+            <p class="text-sm">
+              See <a href="/ab-simulator" class="font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300">ab-simulator</a> for a complete example.
+            </p>
+            <p class="text-xs text-muted-foreground/70 pt-2">
+              Tip: Delete this placeholder once you add your app content.
+            </p>
+          </div>
+        </div>
+      </slot>
+    </div>
+
+    <!-- Understand it + Read about it: Related Content -->
+    <RelatedContent projectId={projectId} projectName={project.name} />
   </div>
 </SiteLayout>

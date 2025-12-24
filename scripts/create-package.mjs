@@ -2,18 +2,17 @@
 
 /**
  * Create Package Script
- * 
+ *
  * Creates a new web app package with:
  * - Package directory in packages/{name}/
- * - Hub page at src/pages/projects/{name}.astro
  * - Project yaml at packages/shared/src/data/projects/{name}.yaml
  * - Notebook folder at analytics/notebooks/{name}/
  * - Sample post at src/content/post/{name}-getting-started.md
- * 
+ *
  * Convention:
- * - Hub page: /projects/{name}
  * - App: /{name}/
- * 
+ * - Analysis: /analysis?project={name}
+ *
  * Usage: node scripts/create-package.mjs <package-name> "<Display Name>" "<Short Description>"
  */
 
@@ -44,7 +43,6 @@ if (!/^[a-z][a-z0-9-]*$/.test(packageName)) {
 
 // Paths
 const packageDir = path.join(process.cwd(), 'packages', packageName)
-const hubPagePath = path.join(process.cwd(), 'src', 'pages', 'projects', `${packageName}.astro`)
 const notebookDir = path.join(process.cwd(), 'analytics', 'notebooks', packageName)
 const projectYamlPath = path.join(process.cwd(), 'packages', 'shared', 'src', 'data', 'projects', `${packageName}.yaml`)
 const samplePostPath = path.join(process.cwd(), 'src', 'content', 'post', `${packageName}-getting-started.md`)
@@ -52,12 +50,6 @@ const samplePostPath = path.join(process.cwd(), 'src', 'content', 'post', `${pac
 // Check if package already exists
 if (fs.existsSync(packageDir)) {
 	console.error(`❌ Package "${packageName}" already exists in packages/`)
-	process.exit(1)
-}
-
-// Check if hub page already exists
-if (fs.existsSync(hubPagePath)) {
-	console.error(`❌ Hub page already exists at src/pages/projects/${packageName}.astro`)
 	process.exit(1)
 }
 
@@ -204,11 +196,6 @@ const indexAstro = applyTemplate(readTemplate('index.astro.template'))
 fs.writeFileSync(path.join(packageDir, 'src', 'pages', 'index.astro'), indexAstro)
 console.log(`  ✓ src/pages/index.astro`)
 
-// Generate hub page from template
-const hubPage = applyTemplate(readTemplate('hub-page.astro.template'))
-fs.writeFileSync(hubPagePath, hubPage)
-console.log(`  ✓ src/pages/projects/${packageName}.astro`)
-
 // Generate project yaml from template
 const projectYaml = applyTemplate(readTemplate('project.yaml.template'))
 fs.writeFileSync(projectYamlPath, projectYaml)
@@ -230,7 +217,9 @@ console.log(`Next steps:`)
 console.log(`  1. pnpm install (from root)`)
 console.log(`  2. pnpm --filter @eeshans/${packageName} dev`)
 console.log(`  3. Open http://localhost:4321/${packageName}/\n`)
-console.log(`Hub page: http://localhost:4321/projects/${packageName}`)
+console.log(`Routes created:`)
+console.log(`  - App: http://localhost:4321/${packageName}/`)
+console.log(`  - Analysis: http://localhost:4321/analysis?project=${packageName}`)
 console.log(`\nDon't forget to:`)
 console.log(`  - Update tags in packages/shared/src/data/projects/${packageName}.yaml`)
 console.log(`  - Add notebooks to analytics/notebooks/${packageName}/ (auto-discovered)\n`)

@@ -1,11 +1,18 @@
 ---
-import PostPreview from '@/components/writing/PostPreview.astro'
+import SubstackPostPreview from '../../../packages/shared/src/components/SubstackPostPreview.astro'
 import PageLayout from '@/layouts/BaseLayout.astro'
-import { getAllPosts, sortMDByDate } from '@/utils'
+import { getSubstackPosts } from '../../../packages/shared/src/lib/substack'
+import { siteConfig } from '@/site-config'
 import Breadcrumbs from '../../../packages/shared/src/components/Breadcrumbs.astro'
 
-const allPosts = await getAllPosts()
-const sortedPosts = sortMDByDate(allPosts)
+// Import YAML mapping as raw text
+import substackMappingsRaw from '../../../packages/shared/src/data/substack-posts.yaml?raw'
+
+// Fetch Substack posts
+const substackPosts = await getSubstackPosts(siteConfig.substackRssUrl, substackMappingsRaw)
+
+// Sort by date (newest first)
+const sortedPosts = substackPosts.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
 
 const meta = {
 	description: 'Behind-the-scenes of building data science apps. What I\'m learning, what the data shows, and what I decide to ship.',
@@ -23,7 +30,7 @@ const meta = {
 		{sortedPosts.length > 0 ? (
 			<ul class='flex flex-col gap-y-4 list-none p-0 m-0'>
 				{sortedPosts.map((post) => (
-					<PostPreview post={post} withDesc />
+					<SubstackPostPreview post={post} withDesc />
 				))}
 			</ul>
 		) : (

@@ -10,7 +10,6 @@
  */
 import PageLayout from '../../../../layouts/BaseLayout.astro'
 import Breadcrumbs from '../../../../../packages/shared/src/components/Breadcrumbs.astro'
-import NotebookSummary from '../../../../../packages/shared/src/components/NotebookSummary.astro'
 import { Icon } from 'astro-icon/components'
 
 import { getAllProjects } from '../../../../../packages/shared/src/data/projectLoader'
@@ -65,6 +64,7 @@ export async function getStaticPaths() {
 
 const { projectId, notebookId } = Astro.params
 const { project, notebookPath } = Astro.props
+const appUrl = `/${projectId}/`  // Link to actual app page
 
 // Guard - should never happen since getStaticPaths filters undefined projects
 if (!project) {
@@ -145,7 +145,7 @@ try {
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
       { label: 'Projects', href: '/projects' },
-      { label: project.name, href: project.hubUrl || `/projects/${project.id}` },
+      { label: project.name, href: appUrl },
       { label: 'Analysis' }
     ]} />
 
@@ -192,9 +192,6 @@ try {
       )}
     </header>
 
-    <!-- Key Findings Summary -->
-    <NotebookSummary projectId={projectId} notebookId={notebookId} />
-
     <!-- Notebook Content -->
     {notebookExists ? (
       <div class='notebook-container hide-code overflow-hidden rounded-lg border border-border bg-white'>
@@ -222,7 +219,7 @@ try {
     <!-- Back to Project -->
     <div class='border-t border-border pt-6'>
       <a
-        href={project.hubUrl || `/projects/${project.id}`}
+        href={appUrl}
         class='inline-flex items-center gap-2 text-muted-foreground transition hover:text-foreground'
       >
         ← Back to {project.name}

@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import icon from 'astro-icon';
 
 // Environment variables are loaded via symlinked .env file (points to ../../.env)
 // This allows the package to access PUBLIC_* vars from the workspace root
@@ -12,7 +13,14 @@ export default defineConfig({
 	build: {
 		format: 'directory'
 	},
-	integrations: [tailwind({
-		applyBaseStyles: false
-	})]
+	integrations: [
+		tailwind({
+			applyBaseStyles: false
+		}),
+		icon({
+			include: {
+				lucide: ['*']  // Include all lucide icons for NotebookSummary
+			}
+		})
+	]
 });
