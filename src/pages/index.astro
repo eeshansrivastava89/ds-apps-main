@@ -116,9 +116,9 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<section class='mt-8 sm:mt-10 space-y-4'>
 				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Projects</h2>
 				<p class='text-base text-muted-foreground'>Each app applies a data science method to a real problem. Interact, contribute data, and explore the published analysis.</p>
-				<div class='space-y-3'>
+				<div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
 					{activeProjects.map((project) => (
-						<ProjectCard project={project} variant='compact' />
+						<ProjectCard project={project} variant='grid' />
 					))}
 				</div>
 				
